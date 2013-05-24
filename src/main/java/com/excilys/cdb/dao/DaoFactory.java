@@ -7,9 +7,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DaoFactory {
+public enum DaoFactory {
 
-	private static DaoFactory instance;
+	INSTANCE;
 
 	private static final String PROPERTIES_FILE = "/com/excilys/cdb/dao/dao.properties";
 	private static final String PROPERTY_URL = "url";
@@ -17,10 +17,10 @@ public class DaoFactory {
 	private static final String PROPERTY_USER = "user";
 	private static final String PROPERTY_PASSWORD = "password";
 
-	private static String url;
-	private static String driver;
-	private static String user;
-	private static String password;
+	private String url;
+	private String driver;
+	private String user;
+	private String password;
 
 	private DaoFactory() {
 		Properties properties = new Properties();
@@ -54,13 +54,6 @@ public class DaoFactory {
 		}
 	}
 
-	public static DaoFactory getInstance() {
-		if (instance == null) {
-			instance = new DaoFactory();
-		}
-		return instance;
-	}
-
 	public Connection getConnection() {
 		Connection connection = null;
 		try {
@@ -71,8 +64,5 @@ public class DaoFactory {
 		return connection;
 	}
 
-	public IComputerDao getComputerDao() {
-		return new ComputerDaoImpl(this);
-	}
 
 }

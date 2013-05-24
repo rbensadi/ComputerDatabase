@@ -8,7 +8,9 @@ import java.util.List;
 
 import com.excilys.cdb.pojo.Computer;
 
-public class ComputerDaoImpl implements IComputerDao {
+public enum ComputerDaoImpl implements IComputerDao {
+
+	INSTANCE;
 
 	private static final String ID_FIELD = "id";
 	private static final String NAME_FIELD = "name";
@@ -22,24 +24,31 @@ public class ComputerDaoImpl implements IComputerDao {
 
 	private DaoFactory daoFactory;
 
-	public ComputerDaoImpl(DaoFactory daoFactory) {
-		this.daoFactory = daoFactory;
+	private ComputerDaoImpl() {
+		this.daoFactory = DaoFactory.INSTANCE;
 	}
 
 	public int insert(Computer computer) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		int id = -1;
 
 		connection = daoFactory.getConnection();
 		try {
 			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					SQL_INSERT, true);
-			id = preparedStatement.executeUpdate();
+					SQL_INSERT, true, computer.getName(),
+					computer.getIntroduced(), computer.getDiscontinued(),
+					computer.getCompanyId());
+			preparedStatement.executeUpdate();
+			resultSet = preparedStatement.getGeneratedKeys();
+			if (resultSet.next()) {
+				id = resultSet.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement);
+			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
 		}
 
 		return id;
