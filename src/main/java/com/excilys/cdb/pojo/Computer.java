@@ -8,7 +8,19 @@ public class Computer {
 	private String name;
 	private Date introduced;
 	private Date discontinued;
-	private int companyId;
+	private Integer companyId;
+
+	public Computer() {
+
+	}
+
+	public Computer(String name, Date introduced, Date disontinued,
+			Integer companyId) {
+		this.name = name;
+		this.introduced = introduced;
+		this.discontinued = disontinued;
+		this.companyId = companyId;
+	}
 
 	public int getId() {
 		return id;
@@ -42,11 +54,11 @@ public class Computer {
 		this.discontinued = discontinued;
 	}
 
-	public int getCompanyId() {
+	public Integer getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(Integer companyId) {
 		this.companyId = companyId;
 	}
 

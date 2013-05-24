@@ -6,16 +6,15 @@ import com.excilys.cdb.pojo.Computer;
 
 public interface IComputerDao {
 
-	Computer findById(int id);
+	int insert(Computer computer);
 	
+	Computer findById(int id);
+
 	Computer findByName(String name);
 
 	List<Computer> list();
 
-	void insert(Computer computer);
-
 	void update(Computer computer);
-
+	
 	void deleteById(int id);
-
 }
