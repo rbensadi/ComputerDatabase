@@ -82,6 +82,7 @@ public class ComputersController extends HttpServlet {
 		int maxSheet = (int) Math.ceil(numberOfComputers
 				/ (double) IComputerService.LIMIT);
 
+		String toto;
 		// Set attributes to the request
 		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
 		request.setAttribute(ATT_CURRENT_SHEET, currentSheet);
