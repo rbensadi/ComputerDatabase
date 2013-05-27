@@ -18,7 +18,7 @@ public interface IComputerDao {
 
 	Computer findByName(String name);
 
-	int numberOfComputers();
+	int numberOfComputers(String filter);
 	
 	List<Computer> list();
 	
@@ -27,4 +27,6 @@ public interface IComputerDao {
 	void update(Computer computer);
 
 	void deleteById(int id);
+	
+	List<Computer> filterByName(String filter, int limit, int offset);
 }

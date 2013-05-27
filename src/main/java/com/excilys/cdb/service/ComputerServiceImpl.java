@@ -28,8 +28,8 @@ public enum ComputerServiceImpl implements IComputerService {
 		return computerDao.findByName(name);
 	}
 
-	public int numberOfComputers() {
-		return computerDao.numberOfComputers();
+	public int numberOfComputers(String filter) {
+		return computerDao.numberOfComputers(filter);
 	}
 
 	public List<Computer> list() {
@@ -48,4 +48,7 @@ public enum ComputerServiceImpl implements IComputerService {
 		computerDao.deleteById(id);
 	}
 
+	public List<Computer> filterByName(String filter, int limit, int offset) {
+		return computerDao.filterByName(filter, limit, offset);
+	}
 }

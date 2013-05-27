@@ -8,18 +8,18 @@ public class Computer {
 	private String name;
 	private Date introduced;
 	private Date discontinued;
-	private Integer companyId;
+	private Company company;
 
 	public Computer() {
 
 	}
 
 	public Computer(String name, Date introduced, Date disontinued,
-			Integer companyId) {
+			Company company) {
 		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = disontinued;
-		this.companyId = companyId;
+		this.company = company;
 	}
 
 	public int getId() {
@@ -54,12 +54,12 @@ public class Computer {
 		this.discontinued = discontinued;
 	}
 
-	public Integer getCompanyId() {
-		return companyId;
+	public Company getCompany() {
+		return company;
 	}
 
-	public void setCompanyId(Integer companyId) {
-		this.companyId = companyId;
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class Computer {
 		sb.append(",discountinued");
 		sb.append(discontinued);
 		sb.append(",companyId:");
-		sb.append(companyId);
+		sb.append(company);
 		return sb.toString();
 	}
 

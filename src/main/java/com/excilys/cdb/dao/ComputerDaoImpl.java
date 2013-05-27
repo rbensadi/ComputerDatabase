@@ -17,16 +17,19 @@ public enum ComputerDaoImpl implements IComputerDao {
 	private static final String SQL_FIND_BY_ID = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE id = ?";
 	// private static final String SQL_FIND_BY_NAME =
 	// "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE name = ?";
-	private static final String SQL_COUNT = "SELECT COUNT(*) FROM computer";
+	private static final String SQL_COUNT = "SELECT COUNT(*) FROM computer WHERE name LIKE ?";
 	private static final String SQL_LIST = "SELECT id,name,introduced,discontinued,company_id FROM computer ORDER BY name";
 	private static final String SQL_SUB_LIST = "SELECT id,name,introduced,discontinued,company_id FROM computer ORDER BY name LIMIT ? OFFSET ?";
 	private static final String SQL_UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	private static final String SQL_DELETE_BY_ID = "DELETE FROM computer where id = ?";
+	private static final String SQL_FILTER_BY_NAME = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE name LIKE ? ORDER BY name LIMIT ? OFFSET ?";
 
 	private DaoFactory daoFactory;
+	private ICompanyDao companyDao;
 
 	private ComputerDaoImpl() {
-		this.daoFactory = DaoFactory.INSTANCE;
+		daoFactory = DaoFactory.INSTANCE;
+		companyDao = CompanyDaoImpl.INSTANCE;
 	}
 
 	public int insert(Computer computer) {
@@ -40,7 +43,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 			preparedStatement = DaoUtils.getPreparedStatement(connection,
 					SQL_INSERT, true, computer.getName(),
 					computer.getIntroduced(), computer.getDiscontinued(),
-					computer.getCompanyId());
+					computer.getCompany().getId());
 			int result = preparedStatement.executeUpdate();
 			if (result != 1) {
 				throw new DaoException("ComputerDao@insert() failed !");
@@ -86,16 +89,21 @@ public enum ComputerDaoImpl implements IComputerDao {
 		return null;
 	}
 
-	public int numberOfComputers() {
+	public int numberOfComputers(String filter) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		int count = 0;
 
+		StringBuilder sb = new StringBuilder();
+		sb.append("%");
+		sb.append(filter);
+		sb.append("%");
+
 		connection = daoFactory.getConnection();
 		try {
 			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					SQL_COUNT, false);
+					SQL_COUNT, false, sb.toString());
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				count = resultSet.getInt(1);
@@ -164,7 +172,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 			preparedStatement = DaoUtils.getPreparedStatement(connection,
 					SQL_UPDATE, false, computer.getName(),
 					computer.getIntroduced(), computer.getDiscontinued(),
-					computer.getCompanyId(), computer.getId());
+					computer.getCompany().getId(), computer.getId());
 			int result = preparedStatement.executeUpdate();
 			if (result != 1) {
 				throw new DaoException("ComputerDao@update() failed !");
@@ -195,15 +203,49 @@ public enum ComputerDaoImpl implements IComputerDao {
 		}
 	}
 
-	public Computer map(ResultSet resultSet) throws SQLException {
+	private Computer map(ResultSet resultSet) throws SQLException {
 		Computer computer = new Computer();
 
 		computer.setId(resultSet.getInt(ID_FIELD));
 		computer.setName(resultSet.getString(NAME_FIELD));
 		computer.setIntroduced(resultSet.getDate(INTRODUCED_FIELD));
 		computer.setDiscontinued(resultSet.getDate(DISCOUNTINUED_FIELD));
-		computer.setCompanyId(resultSet.getInt(ID_COMPANY_FIELD));
+		Object o = resultSet.getObject(ID_COMPANY_FIELD);
+		if (o == null) {
+			computer.setCompany(null);
+		} else {
+			computer.setCompany(companyDao.findById(resultSet
+					.getInt(ID_COMPANY_FIELD)));
+		}
 
 		return computer;
+	}
+
+	public List<Computer> filterByName(String filter, int limit, int offset) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Computer> computers = new ArrayList<Computer>();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("%");
+		sb.append(filter);
+		sb.append("%");
+
+		connection = daoFactory.getConnection();
+		try {
+			preparedStatement = DaoUtils.getPreparedStatement(connection,
+					SQL_FILTER_BY_NAME, false, sb.toString(), limit, offset);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				computers.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			throw new DaoException("ComputerDao@filterByName() failed !", e);
+		} finally {
+			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
+		}
+
+		return computers;
 	}
 }
