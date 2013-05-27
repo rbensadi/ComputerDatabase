@@ -15,14 +15,15 @@ public enum ComputerDaoImpl implements IComputerDao {
 
 	private static final String SQL_INSERT = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
 	private static final String SQL_FIND_BY_ID = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE id = ?";
-	// private static final String SQL_FIND_BY_NAME =
-	// "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE name = ?";
 	private static final String SQL_COUNT = "SELECT COUNT(*) FROM computer WHERE name LIKE ?";
 	private static final String SQL_LIST = "SELECT id,name,introduced,discontinued,company_id FROM computer ORDER BY name";
 	private static final String SQL_SUB_LIST = "SELECT id,name,introduced,discontinued,company_id FROM computer ORDER BY name LIMIT ? OFFSET ?";
 	private static final String SQL_UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	private static final String SQL_DELETE_BY_ID = "DELETE FROM computer where id = ?";
 	private static final String SQL_FILTER_BY_NAME = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE name LIKE ? ORDER BY name LIMIT ? OFFSET ?";
+	private static final String SQL_SORTED_COLUMN_PART1 = "SELECT computer.id,computer.name,computer.introduced,computer.discontinued,computer.company_id FROM computer";
+	private static final String SQL_SORTED_COLUMN_PART2 = " WHERE computer.name LIKE ? ORDER BY ";
+	private static final String SQL_SORTED_COLUMN_PART3 = " LIMIT ? OFFSET ?";
 
 	private DaoFactory daoFactory;
 	private ICompanyDao companyDao;
@@ -82,11 +83,6 @@ public enum ComputerDaoImpl implements IComputerDao {
 		}
 
 		return computer;
-	}
-
-	public Computer findByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public int numberOfComputers(String filter) {
@@ -247,5 +243,57 @@ public enum ComputerDaoImpl implements IComputerDao {
 		}
 
 		return computers;
+	}
+
+	public List<Computer> sortedByColumn(String filter, String columnName,
+			String order, int limit, int offset) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Computer> computers = new ArrayList<Computer>();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("%");
+		sb.append(filter);
+		sb.append("%");
+
+		connection = daoFactory.getConnection();
+		try {
+			preparedStatement = DaoUtils.getPreparedStatement(connection,
+					getOrderByQuery(columnName, order), false, sb.toString(),
+					limit, offset);
+			System.out.println(preparedStatement);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				computers.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			throw new DaoException("ComputerDao@sortedByColumn() failed !", e);
+		} finally {
+			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
+		}
+
+		return computers;
+	}
+
+	private static String getOrderByQuery(String columnName, String order) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(SQL_SORTED_COLUMN_PART1);
+
+		if (columnName.equals(ICompanyDao.NAME_FIELD)) {
+			sb.append(" LEFT JOIN company ON computer.company_id = company.id");
+		}
+
+		sb.append(SQL_SORTED_COLUMN_PART2);
+		if (order.equals("ASC")) {
+			sb.append("-");
+		}
+		sb.append(columnName);
+		sb.append(" ");
+		// sb.append(order);
+		sb.append("DESC");
+		sb.append(SQL_SORTED_COLUMN_PART3);
+
+		return sb.toString();
 	}
 }

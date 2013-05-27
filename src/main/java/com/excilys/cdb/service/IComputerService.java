@@ -12,10 +12,8 @@ public interface IComputerService {
 
 	Computer findById(int id);
 
-	Computer findByName(String name);
-
 	int numberOfComputers(String filter);
-	
+
 	List<Computer> list();
 
 	List<Computer> list(int limit, int offset);
@@ -23,7 +21,9 @@ public interface IComputerService {
 	void update(Computer computer);
 
 	void deleteById(int id);
-	
+
 	List<Computer> filterByName(String filter, int limit, int offset);
 
+	List<Computer> sortedByColumn(String filter, int columnId, int limit,
+			int offset);
 }

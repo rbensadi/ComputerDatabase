@@ -4,8 +4,8 @@ import com.excilys.cdb.pojo.Company;
 
 public interface ICompanyDao {
 
-	String ID_FIELD = "id";
-	String NAME_FIELD = "name";
+	String ID_FIELD = "company.id";
+	String NAME_FIELD = "company.name";
 
 	Company findById(int id);
 

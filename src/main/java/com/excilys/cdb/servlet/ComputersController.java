@@ -65,37 +65,43 @@ public class ComputersController extends HttpServlet {
 		} else {
 			offset = (currentSheet - 1) * IComputerService.LIMIT;
 		}
-		
-		// Getting the good list of computers
-		String filterByName = (String) request.getParameter(ATT_FILTER_BY_NAME);
-		int numberOfComputers;
-		List<Computer> computers;
-		if (filterByName != null) {
-			computers = computerService.filterByName(filterByName,
-					IComputerService.LIMIT, offset);
-			numberOfComputers = computerService.numberOfComputers(filterByName);
-		} else {
-			computers = computerService.list(IComputerService.LIMIT, offset);
-			numberOfComputers = computerService.numberOfComputers("");
-		}
-
-		int maxSheet = (int) Math.ceil(numberOfComputers
-				/ (double) IComputerService.LIMIT);
 
 		// Set the value of the sorted column
 		String sortedString = (String) request.getParameter(ATT_SORTED_COLUMN);
 		int sorted;
-		
-		if(sortedString == null){
+
+		if (sortedString == null) {
 			sorted = 2;
-		}else{
+		} else {
 			try {
 				sorted = Integer.parseInt(sortedString);
 			} catch (NumberFormatException nfe) {
 				sorted = 2;
 			}
 		}
-		
+
+		// Getting the good list of computers
+		String filterByName = (String) request.getParameter(ATT_FILTER_BY_NAME);
+		int numberOfComputers;
+		if (filterByName == null) {
+			filterByName = "";
+		}
+		List<Computer> computers = computerService.sortedByColumn(filterByName,
+				sorted, IComputerService.LIMIT, offset);
+		numberOfComputers = computerService.numberOfComputers(filterByName);
+
+		// if (filterByName != null) {
+		// computers = computerService.filterByName(filterByName,
+		// IComputerService.LIMIT, offset);
+		// numberOfComputers = computerService.numberOfComputers(filterByName);
+		// } else {
+		// computers = computerService.list(IComputerService.LIMIT, offset);
+		// numberOfComputers = computerService.numberOfComputers("");
+		// }
+
+		int maxSheet = (int) Math.ceil(numberOfComputers
+				/ (double) IComputerService.LIMIT);
+
 		// Set attributes to the request
 		request.setAttribute(ATT_CURRENT_SHEET, currentSheet);
 		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
