@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="tag" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,10 +32,10 @@
 		<table class="computers zebra-striped">
 			<thead>
 				<tr>
-					<th class="col2 header headerSortUp"><a href="/computers?s=2">Computer name</a></th>
-					<th class="col3 header "><a href="/computers?s=3">Introduced</a></th>
-					<th class="col4 header "><a href="/computers?s=4">Discontinued</a></th>
-					<th class="col5 header "><a href="/computers?s=5">Company</a></th>
+					<tag:hearderMenu columnName="Computer name" columnNumber="2" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
+					<tag:hearderMenu columnName="Introduced" columnNumber="3" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
+					<tag:hearderMenu columnName="Discontinued" columnNumber="4" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
+					<tag:hearderMenu columnName="Company" columnNumber="5" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
 				</tr>
 			</thead>
 			<tbody>

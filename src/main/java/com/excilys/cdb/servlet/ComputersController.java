@@ -22,6 +22,7 @@ public class ComputersController extends HttpServlet {
 
 	private static final String ATT_CURRENT_SHEET = "p";
 	private static final String ATT_FILTER_BY_NAME = "f";
+	private static final String ATT_SORTED_COLUMN = "s";
 	private static final String ATT_MAX_SHEET = "maxSheet";
 	private static final String ATT_FIRST_COMPUTER_INDICE = "firstComputerIndice";
 	private static final String ATT_LAST_COMPUTER_INDICE = "lastComputerIndice";
@@ -57,8 +58,6 @@ public class ComputersController extends HttpServlet {
 			}
 		}
 
-		String filterByName = (String) request.getParameter(ATT_FILTER_BY_NAME);
-
 		// Count of the offset for the computers list
 		int offset;
 		if (currentSheet == 1) {
@@ -66,8 +65,9 @@ public class ComputersController extends HttpServlet {
 		} else {
 			offset = (currentSheet - 1) * IComputerService.LIMIT;
 		}
-
+		
 		// Getting the good list of computers
+		String filterByName = (String) request.getParameter(ATT_FILTER_BY_NAME);
 		int numberOfComputers;
 		List<Computer> computers;
 		if (filterByName != null) {
@@ -82,10 +82,24 @@ public class ComputersController extends HttpServlet {
 		int maxSheet = (int) Math.ceil(numberOfComputers
 				/ (double) IComputerService.LIMIT);
 
-		String toto;
+		// Set the value of the sorted column
+		String sortedString = (String) request.getParameter(ATT_SORTED_COLUMN);
+		int sorted;
+		
+		if(sortedString == null){
+			sorted = 2;
+		}else{
+			try {
+				sorted = Integer.parseInt(sortedString);
+			} catch (NumberFormatException nfe) {
+				sorted = 2;
+			}
+		}
+		
 		// Set attributes to the request
-		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
 		request.setAttribute(ATT_CURRENT_SHEET, currentSheet);
+		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
+		request.setAttribute(ATT_SORTED_COLUMN, sorted);
 		request.setAttribute(ATT_MAX_SHEET, maxSheet);
 		request.setAttribute(ATT_FIRST_COMPUTER_INDICE, offset + 1);
 		request.setAttribute(ATT_LAST_COMPUTER_INDICE, offset
