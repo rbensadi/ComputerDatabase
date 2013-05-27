@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +13,7 @@
 
 	<header class="topbar">
 		<h1 class="fill">
-			<a href="/"> Play 2.0 sample application &mdash; Computer database </a>
+			<a href="<c:url value="/computers"/>"> Play 2.0 sample application &mdash; Computer database </a>
 		</h1>
 	</header>
 
@@ -40,9 +41,36 @@
 				<c:forEach var="computer" items="${ computers }">
 					<tr>
 						<td><a href="/computers/${ computer.id }">${computer.name }</a></td>
-						<td><em>${ computer.introduced == null ? "-" : computer.introduced }</em></td>
-						<td><em>${ computer.discontinued == null ? "-" : computer.discontinued }</em></td>
-						<td><em>${ computer.companyId == null ? "-" : computer.companyId }</em></td>
+						<td>
+							<c:choose>
+								<c:when test="${ computer.introduced == null }">
+									<em>-</em>
+								</c:when>
+								<c:otherwise>
+									<fmt:formatDate value="${ computer.introduced }" pattern="dd MMM yyyy" />
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${ computer.discontinued == null }">
+									<em>-</em>
+								</c:when>
+								<c:otherwise>
+									<fmt:formatDate value="${ computer.discontinued }" pattern="dd MMM yyyy" />
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${ computer.companyId == null }">
+									<em>-</em>
+								</c:when>
+								<c:otherwise>
+									${ computer.companyId }
+								</c:otherwise>
+							</c:choose>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -50,9 +78,23 @@
 
 		<div id="pagination" class="pagination">
 			<ul>
-				<li class="prev disabled"><a>&larr; Previous</a></li>
+				<c:choose>
+					<c:when test="${ p == 1 }">
+						<li class="prev disabled"><a>&larr; Previous</a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="prev"><a href="<c:url value="/computers"/>?p=${ p - 1 }">&larr; Previous</a></li>
+					</c:otherwise>
+				</c:choose>
 				<li class="current"><a>Displaying ${ firstComputerIndice } to ${ lastComputerIndice } of ${ numberOfComputers }</a></li>
-				<li class="next"><a href="/computers?p=1">Next &rarr;</a></li>
+				<c:choose>
+					<c:when test="${ p == maxSheet }">
+						<li class="next disabled"><a>Next &rarr;</a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="next"><a href="<c:url value="/computers"/>?p=${ p + 1 }">Next &rarr;</a></li>
+					</c:otherwise>
+				</c:choose>
 			</ul>
 		</div>
 	</section>
