@@ -1,16 +1,12 @@
-package com.excilys.cdb.dao;
+package com.excilys.cdb.service;
 
 import java.util.List;
 
 import com.excilys.cdb.pojo.Computer;
 
-public interface IComputerDao {
+public interface IComputerService {
 
-	String ID_FIELD = "id";
-	String NAME_FIELD = "name";
-	String INTRODUCED_FIELD = "introduced";
-	String DISCOUNTINUED_FIELD = "discontinued";
-	String ID_COMPANY_FIELD = "company_id";
+	int LIMIT = 10;
 
 	int insert(Computer computer);
 
@@ -21,10 +17,11 @@ public interface IComputerDao {
 	int numberOfComputers();
 	
 	List<Computer> list();
-	
+
 	List<Computer> list(int limit, int offset);
 
 	void update(Computer computer);
 
 	void deleteById(int id);
+
 }
