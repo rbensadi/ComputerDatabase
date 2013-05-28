@@ -26,7 +26,9 @@ public class AddComputerController extends HttpServlet {
 	public static final String ATT_COMPUTER = "computer";
 	private static final String ATT_COMPANIES = "companies";
 
-	public static final String VIEW = "/WEB-INF/jsp/addComputer.jsp";
+	public static final String VIEW = "/WEB-INF/jsp/crudComputer.jsp";
+	private static final String REDIRECT_VIEW = ".."
+			+ ComputersController.URL;
 
 	private IComputerService computerService;
 	private ICompanyService companyService;
@@ -58,7 +60,7 @@ public class AddComputerController extends HttpServlet {
 			int id = computerService.insert(computer);
 			computer.setId(id);
 			request.getSession().setAttribute(ATT_COMPUTER, computer);
-			response.sendRedirect("../computers");
+			response.sendRedirect(REDIRECT_VIEW);
 		} else {
 			List<Company> companies = companyService.list();
 			request.setAttribute(ATT_COMPANIES, companies);

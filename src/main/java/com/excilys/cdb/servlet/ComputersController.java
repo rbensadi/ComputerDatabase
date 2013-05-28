@@ -19,6 +19,7 @@ public class ComputersController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public static final String VIEW = "/WEB-INF/jsp/computers.jsp";
+	public static final String URL = "/computers";
 
 	private static final String ATT_CURRENT_SHEET = "p";
 	private static final String ATT_FILTER_BY_NAME = "f";
