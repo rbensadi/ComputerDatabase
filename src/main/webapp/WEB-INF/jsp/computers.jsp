@@ -7,8 +7,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Computers database ${ f }</title>
-	<link rel="stylesheet" type="text/css" media="screen" href="<c:url value="/stylesheets/bootstrap.min.css"/>">
-	<link rel="stylesheet" type="text/css" media="screen" href="<c:url value="/stylesheets/main.css"/>">
+	<c:import url="/WEB-INF/jsp/stylesheets.jsp"></c:import>
 </head>
 <body>
 
@@ -26,16 +25,16 @@
 				<input type="search" id="searchbox" name="f" value="${ f }" placeholder="Filter by computer name..."> 
 				<input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
 			</form>
-			<a class="btn success" id="add" href="/computers/new">Add a new computer</a>
+			<a class="btn success" id="add" href="<c:url value="/computers/new"/>">Add a new computer</a>
 		</div>
 		
 		<table class="computers zebra-striped">
 			<thead>
 				<tr>
-					<tag:hearderMenu columnName="Computer name" columnNumber="2" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
-					<tag:hearderMenu columnName="Introduced" columnNumber="3" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
-					<tag:hearderMenu columnName="Discontinued" columnNumber="4" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
-					<tag:hearderMenu columnName="Company" columnNumber="5" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
+					<tag:headerMenu columnName="Computer name" columnNumber="2" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
+					<tag:headerMenu columnName="Introduced" columnNumber="3" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
+					<tag:headerMenu columnName="Discontinued" columnNumber="4" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
+					<tag:headerMenu columnName="Company" columnNumber="5" sortedColumnNumber="${ s }" p="${ p }" f="${ f }" />
 				</tr>
 			</thead>
 			<tbody>
@@ -84,7 +83,7 @@
 						<li class="prev disabled"><a>&larr; Previous</a></li>
 					</c:when>
 					<c:otherwise>
-						<li class="prev"><a href="<c:url value="/computers"/>?p=${ p - 1 }&f=${ f }">&larr; Previous</a></li>
+						<li class="prev"><a href="<c:url value="/computers"/>?p=${ p - 1 }&f=${ f }&s=${ s }">&larr; Previous</a></li>
 					</c:otherwise>
 				</c:choose>
 				<li class="current"><a>Displaying ${ firstComputerIndice } to ${ lastComputerIndice } of ${ numberOfComputers }</a></li>
@@ -93,7 +92,7 @@
 						<li class="next disabled"><a>Next &rarr;</a></li>
 					</c:when>
 					<c:otherwise>
-						<li class="next"><a href="<c:url value="/computers"/>?p=${ p + 1 }&f=${ f }">Next &rarr;</a></li>
+						<li class="next"><a href="<c:url value="/computers"/>?p=${ p + 1 }&f=${ f }&s=${ s }">Next &rarr;</a></li>
 					</c:otherwise>
 				</c:choose>
 			</ul>

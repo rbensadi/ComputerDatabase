@@ -1,0 +1,2 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<c:url value="/stylesheets/bootstrap.min.css"/>">
+<link rel="stylesheet" type="text/css" media="screen" href="<c:url value="/stylesheets/main.css"/>">

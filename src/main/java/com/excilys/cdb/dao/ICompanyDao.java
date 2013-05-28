@@ -1,5 +1,7 @@
 package com.excilys.cdb.dao;
 
+import java.util.List;
+
 import com.excilys.cdb.pojo.Company;
 
 public interface ICompanyDao {
@@ -8,5 +10,7 @@ public interface ICompanyDao {
 	String NAME_FIELD = "company.name";
 
 	Company findById(int id);
+	
+	List<Company> list();
 
 }

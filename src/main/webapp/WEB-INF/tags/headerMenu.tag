@@ -11,12 +11,12 @@
 <c:choose>
 	<c:when test="${ columnNumber == sortedColumnNumber }">
 		<th class="col${ columnNumber } header headerSortUp">
-			<a href="<c:url value="/computers?p=${ p }&f=${ f }&s=${ 0-sortedColumnNumber }"/>">${ columnName }</a>
+			<a href="<c:url value="/computers?p=${ p }&f=${ f }&s=${ -sortedColumnNumber }"/>">${ columnName }</a>
 		</th>
 	</c:when>
 	<c:when test="${ columnNumber == -sortedColumnNumber }">
 		<th class="col${ columnNumber } header headerSortDown">
-			<a href="<c:url value="/computers?p=${ p }&f=${ f }&s=${ 0-sortedColumnNumber }"/>">${ columnName }</a>
+			<a href="<c:url value="/computers?p=${ p }&f=${ f }&s=${ -sortedColumnNumber }"/>">${ columnName }</a>
 		</th>
 	</c:when>
 	<c:otherwise>

@@ -21,4 +21,14 @@ public class Company {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Company@id:");
+		sb.append(id);
+		sb.append(", name:");
+		sb.append(name);
+		return sb.toString();
+	}
+
 }

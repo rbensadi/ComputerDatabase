@@ -39,12 +39,15 @@ public enum ComputerDaoImpl implements IComputerDao {
 		ResultSet resultSet = null;
 		int id = -1;
 
+		Integer companyId = computer.getCompany() == null ? null : computer
+				.getCompany().getId();
+
 		connection = daoFactory.getConnection();
 		try {
 			preparedStatement = DaoUtils.getPreparedStatement(connection,
 					SQL_INSERT, true, computer.getName(),
 					computer.getIntroduced(), computer.getDiscontinued(),
-					computer.getCompany().getId());
+					companyId);
 			int result = preparedStatement.executeUpdate();
 			if (result != 1) {
 				throw new DaoException("ComputerDao@insert() failed !");
@@ -262,7 +265,6 @@ public enum ComputerDaoImpl implements IComputerDao {
 			preparedStatement = DaoUtils.getPreparedStatement(connection,
 					getOrderByQuery(columnName, order), false, sb.toString(),
 					limit, offset);
-			System.out.println(preparedStatement);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				computers.add(map(resultSet));
@@ -285,13 +287,9 @@ public enum ComputerDaoImpl implements IComputerDao {
 		}
 
 		sb.append(SQL_SORTED_COLUMN_PART2);
-		if (order.equals("ASC")) {
-			sb.append("-");
-		}
 		sb.append(columnName);
 		sb.append(" ");
-		// sb.append(order);
-		sb.append("DESC");
+		sb.append(order);
 		sb.append(SQL_SORTED_COLUMN_PART3);
 
 		return sb.toString();

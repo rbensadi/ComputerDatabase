@@ -33,12 +33,16 @@ public class DaoUtils {
 	public static void silentClosing(Connection connection,
 			PreparedStatement preparedStatement) {
 		try {
-			preparedStatement.close();
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		try {
-			connection.close();
+			if (connection != null) {
+				connection.close();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -47,7 +51,9 @@ public class DaoUtils {
 	public static void silentClosing(Connection connection,
 			PreparedStatement preparedStatement, ResultSet resultSet) {
 		try {
-			resultSet.close();
+			if (resultSet != null) {
+				resultSet.close();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

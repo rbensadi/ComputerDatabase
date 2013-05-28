@@ -65,15 +65,15 @@ public class Computer {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("id:");
+		sb.append("Computer@id:");
 		sb.append(id);
 		sb.append(",name:");
 		sb.append(name);
 		sb.append(",introduced:");
 		sb.append(introduced);
-		sb.append(",discountinued");
+		sb.append(",discountinued:");
 		sb.append(discontinued);
-		sb.append(",companyId:");
+		sb.append(",company:");
 		sb.append(company);
 		return sb.toString();
 	}
