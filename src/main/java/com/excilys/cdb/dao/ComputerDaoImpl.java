@@ -166,12 +166,15 @@ public enum ComputerDaoImpl implements IComputerDao {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
+		Integer companyId = computer.getCompany() == null ? null : computer
+				.getCompany().getId();
+
 		connection = daoFactory.getConnection();
 		try {
 			preparedStatement = DaoUtils.getPreparedStatement(connection,
 					SQL_UPDATE, false, computer.getName(),
 					computer.getIntroduced(), computer.getDiscontinued(),
-					computer.getCompany().getId(), computer.getId());
+					companyId, computer.getId());
 			int result = preparedStatement.executeUpdate();
 			if (result != 1) {
 				throw new DaoException("ComputerDao@update() failed !");

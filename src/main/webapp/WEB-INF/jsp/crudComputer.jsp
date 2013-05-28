@@ -16,8 +16,8 @@
 	</header>
 	
 	<section id="main">
-		<h1>Add a computer</h1>
-		<form action="<c:url value="/computers/new"/>" method="POST">
+		<h1>${ isServletAdd ? 'Add' : 'Edit' } a computer</h1>
+		<form action="<c:url value="/computers/${ isServletAdd ? 'new' : 'edit?id='.concat(computer.id) }"/>" method="POST">
 			<fieldset>
 			
 				<div class="clearfix ${ empty form.errors || form.errors['name'] ? '' : 'error'}">
@@ -60,8 +60,14 @@
 			</fieldset>
 
 			<div class="actions">
-				<input type="submit" value="Create this computer" class="btn primary"> or <a href="<c:url value="/computers"/>" class="btn">Cancel</a>
+				<input type="submit" value="${ isServletAdd ? 'Create' : 'Save' } this computer" class="btn primary"> or <a href="<c:url value="/computers"/>" class="btn">Cancel</a>
 			</div>
 		</form>
+		
+		 <c:if test="${ !isServletAdd }">
+			<form action="<c:url value="/computers/delete?id="${ computer.id }/>" method="POST" class="topRight">
+	        	<input type="submit" value="Delete this computer" class="btn danger">
+			</form>
+		</c:if> 
 	</section>
 </html>

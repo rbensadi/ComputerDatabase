@@ -16,7 +16,7 @@ import com.excilys.cdb.service.IComputerService;
 @WebServlet("/computers")
 public class ComputersController extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1200000001L;
 
 	public static final String VIEW = "/WEB-INF/jsp/computers.jsp";
 	public static final String URL = "/computers";
@@ -91,26 +91,23 @@ public class ComputersController extends HttpServlet {
 				sorted, IComputerService.LIMIT, offset);
 		numberOfComputers = computerService.numberOfComputers(filterByName);
 
-		// if (filterByName != null) {
-		// computers = computerService.filterByName(filterByName,
-		// IComputerService.LIMIT, offset);
-		// numberOfComputers = computerService.numberOfComputers(filterByName);
-		// } else {
-		// computers = computerService.list(IComputerService.LIMIT, offset);
-		// numberOfComputers = computerService.numberOfComputers("");
-		// }
-
 		int maxSheet = (int) Math.ceil(numberOfComputers
 				/ (double) IComputerService.LIMIT);
 
 		// Get the computer if added in the session and delete it
 		Computer computer = (Computer) request.getSession().getAttribute(
 				AddComputerController.ATT_COMPUTER);
+		Boolean isServletAdd = (Boolean) request.getSession().getAttribute(
+				AddComputerController.ATT_IS_SERVLET_ADD);
 		request.getSession()
 				.removeAttribute(AddComputerController.ATT_COMPUTER);
+		request.getSession().removeAttribute(
+				AddComputerController.ATT_IS_SERVLET_ADD);
 
 		// Set attributes to the request
 		request.setAttribute(AddComputerController.ATT_COMPUTER, computer);
+		request.setAttribute(AddComputerController.ATT_IS_SERVLET_ADD,
+				isServletAdd);
 		request.setAttribute(ATT_CURRENT_SHEET, currentSheet);
 		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
 		request.setAttribute(ATT_SORTED_COLUMN, sorted);

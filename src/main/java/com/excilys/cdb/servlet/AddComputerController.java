@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.cdb.form.AForm;
-import com.excilys.cdb.form.AddComputerForm;
+import com.excilys.cdb.form.CrudComputerForm;
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
 import com.excilys.cdb.service.CompanyServiceImpl;
@@ -21,14 +21,14 @@ import com.excilys.cdb.service.IComputerService;
 @WebServlet("/computers/new")
 public class AddComputerController extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1200000002L;
 
 	public static final String ATT_COMPUTER = "computer";
-	private static final String ATT_COMPANIES = "companies";
+	public static final String ATT_COMPANIES = "companies";
+	public static final String ATT_IS_SERVLET_ADD = "isServletAdd";
 
 	public static final String VIEW = "/WEB-INF/jsp/crudComputer.jsp";
-	private static final String REDIRECT_VIEW = ".."
-			+ ComputersController.URL;
+	public static final String REDIRECT_VIEW = ".." + ComputersController.URL;
 
 	private IComputerService computerService;
 	private ICompanyService companyService;
@@ -45,6 +45,7 @@ public class AddComputerController extends HttpServlet {
 		List<Company> companies = companyService.list();
 
 		request.setAttribute(ATT_COMPANIES, companies);
+		request.setAttribute(ATT_IS_SERVLET_ADD, true);
 
 		getServletContext().getRequestDispatcher(VIEW).forward(request,
 				response);
@@ -53,18 +54,20 @@ public class AddComputerController extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		AddComputerForm form = new AddComputerForm();
-		Computer computer = form.addComputer(request);
+		CrudComputerForm form = new CrudComputerForm();
+		Computer computer = form.computerCrudValidation(request);
 
 		if (form.isValid()) {
 			int id = computerService.insert(computer);
 			computer.setId(id);
 			request.getSession().setAttribute(ATT_COMPUTER, computer);
+			request.getSession().setAttribute(ATT_IS_SERVLET_ADD, true);
 			response.sendRedirect(REDIRECT_VIEW);
 		} else {
 			List<Company> companies = companyService.list();
 			request.setAttribute(ATT_COMPANIES, companies);
 			request.setAttribute(AForm.ATT_FORM, form);
+			request.setAttribute(ATT_IS_SERVLET_ADD, true);
 			getServletContext().getRequestDispatcher(VIEW).forward(request,
 					response);
 		}

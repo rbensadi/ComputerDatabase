@@ -22,7 +22,7 @@
 		
 		<c:if test="${ computer != null }">
 			<div class="alert-message warning">
-            	<strong>Done!</strong> Computer ${ computer.name } has been created
+            	<strong>Done!</strong> Computer ${ computer.name } has been ${ isServletAdd ? 'created' : 'updated' }
         	</div>
 		</c:if>
 		
@@ -46,7 +46,7 @@
 			<tbody>
 				<c:forEach var="computer" items="${ computers }">
 					<tr>
-						<td><a href="/computers/${ computer.id }">${computer.name }</a></td>
+						<td><a href="<c:url value="/computers/edit?id=${ computer.id }"/>">${ computer.name }</a></td>
 						<td>
 							<c:choose>
 								<c:when test="${ computer.introduced == null }">

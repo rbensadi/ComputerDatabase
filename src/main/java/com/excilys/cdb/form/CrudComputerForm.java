@@ -11,13 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
 import com.excilys.cdb.service.CompanyServiceImpl;
+import com.excilys.cdb.service.ComputerServiceImpl;
 import com.excilys.cdb.service.ICompanyService;
+import com.excilys.cdb.service.IComputerService;
 
-public class AddComputerForm extends AForm {
+public class CrudComputerForm extends AForm {
 
 	private static final String INTRODUCED_ERROR_MESSAGE = "AddComputerForm@introducedValidation() : The introduced date has a not the 'yyyy-MM-dd' format.";
 	private static final String DISCONTINUED_ERROR_MESSAGE = "AddComputerForm@discontinuedValidation() : The discontinued date has a not the 'yyyy-MM-dd' format.";
 
+	private static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
 	private static final String FIELD_INTRODUCED = "introduced";
 	private static final String FIELD_DISCONTINUED = "discontinued";
@@ -26,13 +29,15 @@ public class AddComputerForm extends AForm {
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd",
 			Locale.FRANCE);
 
+	private IComputerService computerService;
 	private ICompanyService companyService;
 
-	public AddComputerForm() {
+	public CrudComputerForm() {
+		computerService = ComputerServiceImpl.INSTANCE;
 		companyService = CompanyServiceImpl.INSTANCE;
 	}
 
-	public Computer addComputer(HttpServletRequest request) {
+	public Computer computerCrudValidation(HttpServletRequest request) {
 		String name = FormUtils.getFieldValue(request, FIELD_NAME);
 		String introduced = FormUtils.getFieldValue(request, FIELD_INTRODUCED);
 		String discontinued = FormUtils.getFieldValue(request,
@@ -51,6 +56,49 @@ public class AddComputerForm extends AForm {
 			if (computer.getIntroduced().compareTo(computer.getDiscontinued()) > 0) {
 				errors.put(FIELD_DISCONTINUED, false);
 			}
+		}
+
+		return computer;
+	}
+
+	public Computer computerCrudValidationUpdate(HttpServletRequest request) {
+		Computer computer = computerCrudValidation(request);
+		Integer id = Integer.parseInt(FormUtils
+				.getFieldValue(request, FIELD_ID));
+		computer.setId(id);
+		return computer;
+	}
+
+	public Computer getComputer(HttpServletRequest request) {
+		String idStr = FormUtils.getFieldValue(request, FIELD_ID);
+
+		Integer id;
+		try {
+			id = Integer.parseInt(idStr);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+
+		Computer computer = computerService.findById(id);
+
+		if (computer == null) {
+			return null;
+		}
+
+		fields.put(FIELD_NAME, computer.getName());
+
+		if (computer.getIntroduced() != null) {
+			fields.put(FIELD_INTRODUCED, df.format(computer.getIntroduced()));
+		}
+
+		if (computer.getDiscontinued() != null) {
+			fields.put(FIELD_DISCONTINUED,
+					df.format(computer.getDiscontinued()));
+		}
+
+		if (computer.getCompany() != null) {
+			fields.put(FIELD_COMPANY,
+					String.valueOf(computer.getCompany().getId()));
 		}
 
 		return computer;
