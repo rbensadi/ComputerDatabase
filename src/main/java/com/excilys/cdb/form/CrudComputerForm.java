@@ -20,7 +20,7 @@ public class CrudComputerForm extends AForm {
 	private static final String INTRODUCED_ERROR_MESSAGE = "AddComputerForm@introducedValidation() : The introduced date has a not the 'yyyy-MM-dd' format.";
 	private static final String DISCONTINUED_ERROR_MESSAGE = "AddComputerForm@discontinuedValidation() : The discontinued date has a not the 'yyyy-MM-dd' format.";
 
-	private static final String FIELD_ID = "id";
+	public static final String FIELD_ID = "id";
 	private static final String FIELD_NAME = "name";
 	private static final String FIELD_INTRODUCED = "introduced";
 	private static final String FIELD_DISCONTINUED = "discontinued";

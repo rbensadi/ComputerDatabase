@@ -65,7 +65,7 @@
 		</form>
 		
 		 <c:if test="${ !isServletAdd }">
-			<form action="<c:url value="/computers/delete?id="${ computer.id }/>" method="POST" class="topRight">
+			<form action="<c:url value="/computers/delete?id=${ computer.id }"/>" method="POST" class="topRight">
 	        	<input type="submit" value="Delete this computer" class="btn danger">
 			</form>
 		</c:if> 

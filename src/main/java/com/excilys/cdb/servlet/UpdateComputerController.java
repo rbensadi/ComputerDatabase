@@ -19,7 +19,7 @@ import com.excilys.cdb.service.ICompanyService;
 import com.excilys.cdb.service.IComputerService;
 
 @WebServlet("/computers/edit")
-public class UpdateDeleteComputerController extends HttpServlet {
+public class UpdateComputerController extends HttpServlet {
 
 	private static final long serialVersionUID = 1200000003L;
 

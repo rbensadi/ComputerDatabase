@@ -9,9 +9,20 @@
 		<servlet-name>UpdateDeleteComputerController</servlet-name>
 		<servlet-class>com.excilys.cdb.servlet.UpdateDeleteComputerController</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>DeleteComputerController</display-name>
+		<servlet-name>DeleteComputerController</servlet-name>
+		<servlet-class>com.excilys.cdb.servlet.DeleteComputerController</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>UpdateDeleteComputerController</servlet-name>
 		<url-pattern>/UpdateDeleteComputerController</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DeleteComputerController</servlet-name>
+		<url-pattern>/DeleteComputerController</url-pattern>
 	</servlet-mapping>
 
 	<jsp-config>
