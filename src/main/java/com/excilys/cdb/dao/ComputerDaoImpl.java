@@ -22,7 +22,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 	private static final String SQL_DELETE_BY_ID = "DELETE FROM computer where id = ?";
 	private static final String SQL_FILTER_BY_NAME = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE name LIKE ? ORDER BY name LIMIT ? OFFSET ?";
 	private static final String SQL_SORTED_COLUMN_PART1 = "SELECT computer.id,computer.name,computer.introduced,computer.discontinued,computer.company_id FROM computer";
-	private static final String SQL_SORTED_COLUMN_PART2 = " WHERE computer.name LIKE ? ORDER BY ";
+	private static final String SQL_SORTED_COLUMN_PART2 = " WHERE computer.name LIKE ? ORDER BY ISNULL(";
 	private static final String SQL_SORTED_COLUMN_PART3 = " LIMIT ? OFFSET ?";
 
 	private DaoFactory daoFactory;
@@ -290,6 +290,8 @@ public enum ComputerDaoImpl implements IComputerDao {
 		}
 
 		sb.append(SQL_SORTED_COLUMN_PART2);
+		sb.append(columnName);
+		sb.append("),");
 		sb.append(columnName);
 		sb.append(" ");
 		sb.append(order);

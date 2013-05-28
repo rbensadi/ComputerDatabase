@@ -41,23 +41,16 @@ public class ComputersController extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		// CurrentSheet
-		int currentSheet;
-		String currentSheetString = (String) request
-				.getParameter(ATT_CURRENT_SHEET);
-
-		if (currentSheetString == null) {
-			currentSheet = 1;
-		} else {
-			try {
-				currentSheet = Integer.parseInt(currentSheetString);
-			} catch (NumberFormatException nfe) {
-				currentSheet = 1;
-			}
-			if (currentSheet <= 0) {
-				currentSheet = 1;
-			}
+		String filterByName = (String) request.getParameter(ATT_FILTER_BY_NAME);
+		if (filterByName == null) {
+			filterByName = "";
 		}
+		int numberOfComputers = computerService.numberOfComputers(filterByName);
+		int maxSheet = (int) Math.ceil(numberOfComputers
+				/ (double) IComputerService.LIMIT);
+
+		int currentSheet = initIntegerFieldBetween(request, ATT_CURRENT_SHEET,
+				1, 1, maxSheet + 1);
 
 		// Count of the offset for the computers list
 		int offset;
@@ -68,31 +61,32 @@ public class ComputersController extends HttpServlet {
 		}
 
 		// Set the value of the sorted column
-		String sortedString = (String) request.getParameter(ATT_SORTED_COLUMN);
-		int sorted;
-
-		if (sortedString == null) {
-			sorted = 2;
-		} else {
-			try {
-				sorted = Integer.parseInt(sortedString);
-			} catch (NumberFormatException nfe) {
-				sorted = 2;
-			}
-		}
+		// String sortedString = (String)
+		// request.getParameter(ATT_SORTED_COLUMN);
+		// int sorted;
+		//
+		// if (sortedString == null) {
+		// sorted = 2;
+		// } else {
+		// try {
+		// sorted = Integer.parseInt(sortedString);
+		// } catch (NumberFormatException nfe) {
+		// sorted = 2;
+		// }
+		// }
+		int sorted = initIntegerFieldBetweenAbsolute(request,
+				ATT_SORTED_COLUMN, 2, 2, 5);
 
 		// Getting the good list of computers
-		String filterByName = (String) request.getParameter(ATT_FILTER_BY_NAME);
-		int numberOfComputers;
-		if (filterByName == null) {
-			filterByName = "";
-		}
 		List<Computer> computers = computerService.sortedByColumn(filterByName,
 				sorted, IComputerService.LIMIT, offset);
-		numberOfComputers = computerService.numberOfComputers(filterByName);
 
-		int maxSheet = (int) Math.ceil(numberOfComputers
-				/ (double) IComputerService.LIMIT);
+		int firstComputerIndice = (currentSheet - 1) * IComputerService.LIMIT;
+		int lastComputerIndice = firstComputerIndice + IComputerService.LIMIT;
+
+		if (lastComputerIndice > numberOfComputers) {
+			lastComputerIndice = numberOfComputers;
+		}
 
 		// Get the computer if added in the session and delete it
 		String message = (String) request.getSession().getAttribute(
@@ -105,9 +99,8 @@ public class ComputersController extends HttpServlet {
 		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
 		request.setAttribute(ATT_SORTED_COLUMN, sorted);
 		request.setAttribute(ATT_MAX_SHEET, maxSheet);
-		request.setAttribute(ATT_FIRST_COMPUTER_INDICE, offset + 1);
-		request.setAttribute(ATT_LAST_COMPUTER_INDICE, offset
-				+ IComputerService.LIMIT);
+		request.setAttribute(ATT_FIRST_COMPUTER_INDICE, firstComputerIndice + 1);
+		request.setAttribute(ATT_LAST_COMPUTER_INDICE, lastComputerIndice);
 		request.setAttribute(ATT_NUMBER_OF_COMPUTERS, numberOfComputers);
 		request.setAttribute(ATT_COMPUTERS, computers);
 
@@ -115,4 +108,41 @@ public class ComputersController extends HttpServlet {
 				response);
 	}
 
+	private static int initIntegerField(HttpServletRequest request,
+			String field, int defaultValue) {
+		String valueStr = request.getParameter(field);
+		Integer valueInt;
+		try {
+			valueInt = Integer.parseInt(valueStr);
+		} catch (NumberFormatException e) {
+			valueInt = defaultValue;
+		}
+		return valueInt;
+	}
+
+	private static int initIntegerFieldBetween(HttpServletRequest request,
+			String field, int defaultValue, int min, int max) {
+		Integer valueInt = initIntegerField(request, field, defaultValue);
+		if (isBetween(valueInt, min, max)) {
+			valueInt = defaultValue;
+		}
+		return valueInt;
+	}
+
+	private static int initIntegerFieldBetweenAbsolute(
+			HttpServletRequest request, String field, int defaultValue,
+			int min, int max) {
+		Integer valueInt = initIntegerField(request, field, defaultValue);
+		if (isBetween(Math.abs(valueInt), min, max)) {
+			valueInt = defaultValue;
+		}
+		return valueInt;
+	}
+
+	private static boolean isBetween(int value, int min, int max) {
+		if (value <= min || value >= max) {
+			return true;
+		}
+		return false;
+	}
 }
