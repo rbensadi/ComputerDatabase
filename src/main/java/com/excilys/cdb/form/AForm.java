@@ -22,6 +22,9 @@ public abstract class AForm {
 
 	public boolean isValid() {
 		boolean valid = true;
+		if (errors.isEmpty()) {
+			return false;
+		}
 		for (Map.Entry<String, Boolean> entry : errors.entrySet()) {
 			valid = valid && entry.getValue();
 		}

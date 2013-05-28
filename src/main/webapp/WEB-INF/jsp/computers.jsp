@@ -16,9 +16,15 @@
 			<a href="<c:url value="/computers"/>"> Play 2.0 sample application &mdash; Computer database </a>
 		</h1>
 	</header>
-
+	
 	<section id="main">
 		<h1>${ numberOfComputers } computers found</h1>
+		
+		<c:if test="${ computer != null }">
+			<div class="alert-message warning">
+            	<strong>Done!</strong> Computer ${ computer.name } has been created
+        	</div>
+		</c:if>
 		
 		<div id="actions">
 			<form action="<c:url value="/computers"/>" method="GET">

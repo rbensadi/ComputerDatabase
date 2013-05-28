@@ -11,9 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
 import com.excilys.cdb.service.CompanyServiceImpl;
-import com.excilys.cdb.service.ComputerServiceImpl;
 import com.excilys.cdb.service.ICompanyService;
-import com.excilys.cdb.service.IComputerService;
 
 public class AddComputerForm extends AForm {
 
@@ -28,11 +26,9 @@ public class AddComputerForm extends AForm {
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd",
 			Locale.FRANCE);
 
-	private IComputerService computerService;
 	private ICompanyService companyService;
 
 	public AddComputerForm() {
-		computerService = ComputerServiceImpl.INSTANCE;
 		companyService = CompanyServiceImpl.INSTANCE;
 	}
 
@@ -55,10 +51,6 @@ public class AddComputerForm extends AForm {
 			if (computer.getIntroduced().compareTo(computer.getDiscontinued()) > 0) {
 				errors.put(FIELD_DISCONTINUED, false);
 			}
-		}
-
-		if (isValid()) {
-			computerService.insert(computer);
 		}
 
 		return computer;

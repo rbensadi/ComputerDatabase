@@ -10,8 +10,4 @@
 		</jsp-property-group>
 	</jsp-config>
 
-	<welcome-file-list>
-		<welcome-file>/computers</welcome-file>
-	</welcome-file-list>
-
 </web-app>

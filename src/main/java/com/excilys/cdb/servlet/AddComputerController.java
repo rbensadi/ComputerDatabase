@@ -14,22 +14,26 @@ import com.excilys.cdb.form.AddComputerForm;
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
 import com.excilys.cdb.service.CompanyServiceImpl;
+import com.excilys.cdb.service.ComputerServiceImpl;
 import com.excilys.cdb.service.ICompanyService;
+import com.excilys.cdb.service.IComputerService;
 
 @WebServlet("/computers/new")
 public class AddComputerController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String ATT_COMPUTER = "computer";
+	public static final String ATT_COMPUTER = "computer";
 	private static final String ATT_COMPANIES = "companies";
 
-	private static final String VIEW = "/WEB-INF/jsp/addComputer.jsp";
+	public static final String VIEW = "/WEB-INF/jsp/addComputer.jsp";
 
+	private IComputerService computerService;
 	private ICompanyService companyService;
 
 	@Override
 	public void init() throws ServletException {
+		computerService = ComputerServiceImpl.INSTANCE;
 		companyService = CompanyServiceImpl.INSTANCE;
 	}
 
@@ -48,17 +52,20 @@ public class AddComputerController extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		AddComputerForm form = new AddComputerForm();
-
 		Computer computer = form.addComputer(request);
 
-		List<Company> companies = companyService.list();
-
-		request.setAttribute(ATT_COMPANIES, companies);
-		request.setAttribute(ATT_COMPUTER, computer);
-		request.setAttribute(AForm.ATT_FORM, form);
-
-		getServletContext().getRequestDispatcher(VIEW).forward(request,
-				response);
+		if (form.isValid()) {
+			int id = computerService.insert(computer);
+			computer.setId(id);
+			request.getSession().setAttribute(ATT_COMPUTER, computer);
+			response.sendRedirect("../computers");
+		} else {
+			List<Company> companies = companyService.list();
+			request.setAttribute(ATT_COMPANIES, companies);
+			request.setAttribute(AForm.ATT_FORM, form);
+			getServletContext().getRequestDispatcher(VIEW).forward(request,
+					response);
+		}
 	}
 
 }
