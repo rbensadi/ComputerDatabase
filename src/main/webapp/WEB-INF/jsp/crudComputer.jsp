@@ -16,8 +16,8 @@
 	</header>
 	
 	<section id="main">
-		<h1>${ isServletAdd ? 'Add' : 'Edit' } a computer</h1>
-		<form action="<c:url value="/computers/${ isServletAdd ? 'new' : 'edit?id='.concat(computer.id) }"/>" method="POST">
+		<h1>${ showDelete ? 'Add' : 'Edit' } a computer</h1>
+		<form action="<c:url value="/computers/${ showDelete ? 'new' : 'edit?id='.concat(computer.id) }"/>" method="POST">
 			<fieldset>
 			
 				<div class="clearfix ${ empty form.errors || form.errors['name'] ? '' : 'error'}">
@@ -64,7 +64,7 @@
 			</div>
 		</form>
 		
-		 <c:if test="${ !isServletAdd }">
+		 <c:if test="${ !showDelete }">
 			<form action="<c:url value="/computers/delete?id=${ computer.id }"/>" method="POST" class="topRight">
 	        	<input type="submit" value="Delete this computer" class="btn danger">
 			</form>

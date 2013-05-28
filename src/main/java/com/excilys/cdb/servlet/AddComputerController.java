@@ -25,7 +25,11 @@ public class AddComputerController extends HttpServlet {
 
 	public static final String ATT_COMPUTER = "computer";
 	public static final String ATT_COMPANIES = "companies";
-	public static final String ATT_IS_SERVLET_ADD = "isServletAdd";
+	public static final String ATT_SHOW_DELETE = "showDelete";
+	public static final String ATT_MESSAGE = "message";
+
+	public static final String MESSAGE_PART1 = "Computer ";
+	private static final String MESSAGE_PART2 = " has been created";
 
 	public static final String VIEW = "/WEB-INF/jsp/crudComputer.jsp";
 	public static final String REDIRECT_VIEW = ".." + ComputersController.URL;
@@ -45,7 +49,7 @@ public class AddComputerController extends HttpServlet {
 		List<Company> companies = companyService.list();
 
 		request.setAttribute(ATT_COMPANIES, companies);
-		request.setAttribute(ATT_IS_SERVLET_ADD, true);
+		request.setAttribute(ATT_SHOW_DELETE, true);
 
 		getServletContext().getRequestDispatcher(VIEW).forward(request,
 				response);
@@ -58,16 +62,19 @@ public class AddComputerController extends HttpServlet {
 		Computer computer = form.computerCrudValidation(request);
 
 		if (form.isValid()) {
-			int id = computerService.insert(computer);
-			computer.setId(id);
-			request.getSession().setAttribute(ATT_COMPUTER, computer);
-			request.getSession().setAttribute(ATT_IS_SERVLET_ADD, true);
+			computerService.insert(computer);
+			StringBuilder sb = new StringBuilder();
+			sb.append(MESSAGE_PART1);
+			sb.append(computer.getName());
+			sb.append(MESSAGE_PART2);
+			request.getSession().setAttribute(ATT_MESSAGE, sb.toString());
+			request.getSession().setAttribute(ATT_SHOW_DELETE, true);
 			response.sendRedirect(REDIRECT_VIEW);
 		} else {
 			List<Company> companies = companyService.list();
 			request.setAttribute(ATT_COMPANIES, companies);
 			request.setAttribute(AForm.ATT_FORM, form);
-			request.setAttribute(ATT_IS_SERVLET_ADD, true);
+			request.setAttribute(ATT_SHOW_DELETE, true);
 			getServletContext().getRequestDispatcher(VIEW).forward(request,
 					response);
 		}

@@ -95,19 +95,12 @@ public class ComputersController extends HttpServlet {
 				/ (double) IComputerService.LIMIT);
 
 		// Get the computer if added in the session and delete it
-		Computer computer = (Computer) request.getSession().getAttribute(
-				AddComputerController.ATT_COMPUTER);
-		Boolean isServletAdd = (Boolean) request.getSession().getAttribute(
-				AddComputerController.ATT_IS_SERVLET_ADD);
-		request.getSession()
-				.removeAttribute(AddComputerController.ATT_COMPUTER);
-		request.getSession().removeAttribute(
-				AddComputerController.ATT_IS_SERVLET_ADD);
+		String message = (String) request.getSession().getAttribute(
+				AddComputerController.ATT_MESSAGE);
+		request.getSession().removeAttribute(AddComputerController.ATT_MESSAGE);
 
 		// Set attributes to the request
-		request.setAttribute(AddComputerController.ATT_COMPUTER, computer);
-		request.setAttribute(AddComputerController.ATT_IS_SERVLET_ADD,
-				isServletAdd);
+		request.setAttribute(AddComputerController.ATT_MESSAGE, message);
 		request.setAttribute(ATT_CURRENT_SHEET, currentSheet);
 		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
 		request.setAttribute(ATT_SORTED_COLUMN, sorted);

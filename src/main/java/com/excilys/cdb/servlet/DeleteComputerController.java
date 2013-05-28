@@ -18,6 +18,8 @@ public class DeleteComputerController extends HttpServlet {
 
 	private static final long serialVersionUID = 1200000004L;
 
+	private static final String MESSAGE = "Computer has been deleted";
+
 	private IComputerService computerService;
 
 	@Override
@@ -30,6 +32,8 @@ public class DeleteComputerController extends HttpServlet {
 		Integer id = Integer.parseInt(FormUtils.getFieldValue(request,
 				CrudComputerForm.FIELD_ID));
 		computerService.deleteById(id);
+		request.getSession().setAttribute(AddComputerController.ATT_MESSAGE,
+				MESSAGE);
 		response.sendRedirect(AddComputerController.REDIRECT_VIEW);
 	}
 

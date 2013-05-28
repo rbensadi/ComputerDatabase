@@ -23,6 +23,8 @@ public class UpdateComputerController extends HttpServlet {
 
 	private static final long serialVersionUID = 1200000003L;
 
+	private static final String MESSAGE_PART2 = " has been updated";
+
 	private IComputerService computerService;
 	private ICompanyService companyService;
 
@@ -43,8 +45,7 @@ public class UpdateComputerController extends HttpServlet {
 			request.setAttribute(AddComputerController.ATT_COMPUTER, computer);
 			request.setAttribute(AForm.ATT_FORM, form);
 			request.setAttribute(AddComputerController.ATT_COMPANIES, companies);
-			request.setAttribute(AddComputerController.ATT_IS_SERVLET_ADD,
-					false);
+			request.setAttribute(AddComputerController.ATT_SHOW_DELETE, false);
 			getServletContext()
 					.getRequestDispatcher(AddComputerController.VIEW).forward(
 							request, response);
@@ -61,18 +62,21 @@ public class UpdateComputerController extends HttpServlet {
 
 		if (form.isValid()) {
 			computerService.update(computer);
+			StringBuilder sb = new StringBuilder();
+			sb.append(AddComputerController.MESSAGE_PART1);
+			sb.append(computer.getName());
+			sb.append(MESSAGE_PART2);
 			request.getSession().setAttribute(
-					AddComputerController.ATT_COMPUTER, computer);
+					AddComputerController.ATT_MESSAGE, sb.toString());
 			request.getSession().setAttribute(
-					AddComputerController.ATT_IS_SERVLET_ADD, false);
+					AddComputerController.ATT_SHOW_DELETE, false);
 			response.sendRedirect(AddComputerController.REDIRECT_VIEW);
 		} else {
 			List<Company> companies = companyService.list();
 			request.setAttribute(AForm.ATT_FORM, form);
 			request.setAttribute(AddComputerController.ATT_COMPUTER, computer);
 			request.setAttribute(AddComputerController.ATT_COMPANIES, companies);
-			request.setAttribute(AddComputerController.ATT_IS_SERVLET_ADD,
-					false);
+			request.setAttribute(AddComputerController.ATT_SHOW_DELETE, false);
 			getServletContext()
 					.getRequestDispatcher(AddComputerController.VIEW).forward(
 							request, response);

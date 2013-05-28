@@ -20,9 +20,9 @@
 	<section id="main">
 		<h1>${ numberOfComputers } computers found</h1>
 		
-		<c:if test="${ computer != null }">
+		<c:if test="${ message != null }">
 			<div class="alert-message warning">
-            	<strong>Done!</strong> Computer ${ computer.name } has been ${ isServletAdd ? 'created' : 'updated' }
+            	<strong>Done!</strong> ${ message }
         	</div>
 		</c:if>
 		
