@@ -29,24 +29,12 @@ public enum ComputerServiceImpl implements IComputerService {
 		return computerDao.numberOfComputers(filter);
 	}
 
-	public List<Computer> list() {
-		return computerDao.list();
-	}
-
-	public List<Computer> list(int limit, int offset) {
-		return computerDao.list(limit, offset);
-	}
-
 	public void update(Computer computer) {
 		computerDao.update(computer);
 	}
 
 	public void deleteById(int id) {
 		computerDao.deleteById(id);
-	}
-
-	public List<Computer> filterByName(String filter, int limit, int offset) {
-		return computerDao.filterByName(filter, limit, offset);
 	}
 
 	public List<Computer> sortedByColumn(String filter, int columnId,

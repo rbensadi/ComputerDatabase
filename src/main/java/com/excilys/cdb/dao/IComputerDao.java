@@ -21,15 +21,10 @@ public interface IComputerDao {
 
 	int numberOfComputers(String filter);
 
-	List<Computer> list();
-
-	List<Computer> list(int limit, int offset);
-
 	void update(Computer computer);
 
 	void deleteById(int id);
 
-	List<Computer> filterByName(String filter, int limit, int offset);
 
 	List<Computer> sortedByColumn(String filter, String columnName, String order, int limit,
 			int offset);
