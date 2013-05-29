@@ -3,6 +3,7 @@ package com.excilys.cdb.service;
 import java.util.List;
 
 import com.excilys.cdb.pojo.Computer;
+import com.excilys.cdb.pojo.Search;
 
 public interface IComputerService {
 
@@ -26,5 +27,6 @@ public interface IComputerService {
 
 	List<Computer> sortedByColumn(String filter, int columnId, int limit,
 			int offset);
-	
+
+	Search getSearch(String filterByName, int sorted, int offset);
 }

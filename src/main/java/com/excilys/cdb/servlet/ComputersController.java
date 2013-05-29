@@ -1,7 +1,6 @@
 package com.excilys.cdb.servlet;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.cdb.pojo.Computer;
+import com.excilys.cdb.form.FormUtils;
+import com.excilys.cdb.pojo.Search;
 import com.excilys.cdb.service.ComputerServiceImpl;
 import com.excilys.cdb.service.IComputerService;
 
@@ -21,10 +21,10 @@ public class ComputersController extends HttpServlet {
 	public static final String VIEW = "/WEB-INF/jsp/computers.jsp";
 	public static final String URL = "/computers";
 
-	private static final String ATT_CURRENT_SHEET = "p";
+	private static final String ATT_CURRENT_PAGE = "p";
 	private static final String ATT_FILTER_BY_NAME = "f";
 	private static final String ATT_SORTED_COLUMN = "s";
-	private static final String ATT_MAX_SHEET = "maxSheet";
+	private static final String ATT_MAX_NUMBER_OF_PAGES = "maxNumberOfPages";
 	private static final String ATT_FIRST_COMPUTER_INDICE = "firstComputerIndice";
 	private static final String ATT_LAST_COMPUTER_INDICE = "lastComputerIndice";
 	private static final String ATT_NUMBER_OF_COMPUTERS = "numberOfComputers";
@@ -34,6 +34,12 @@ public class ComputersController extends HttpServlet {
 	private static final String TITLE_GREATER_THAN_1 = " computers found";
 	private static final String TITLE_EQUALS_1 = "1 computer found";
 	private static final String TITLE_NULL = " No computers found";
+
+	private static final int DEFAULT_CURRENT_PAGE = 1;
+	private static final String DEFAULT_FILTER_BY_NAME = "";
+	private static final int DEFAULT_SORTED = 2;
+	private static final int SORTED_MIN = DEFAULT_SORTED;
+	private static final int SORTED_MAX = 5;
 
 	private IComputerService computerService;
 
@@ -46,43 +52,49 @@ public class ComputersController extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		// FILTER PARAMETER
-		String filterByName = (String) request.getParameter(ATT_FILTER_BY_NAME);
-		if (filterByName == null) {
-			filterByName = "";
+		// CURRENT PAGE
+		String currentPageStr = FormUtils.getFieldValue(request,
+				ATT_CURRENT_PAGE);
+		int currentPage = initIntegerField(currentPageStr, DEFAULT_CURRENT_PAGE);
+		if (currentPage < DEFAULT_CURRENT_PAGE) {
+			currentPage = DEFAULT_CURRENT_PAGE;
 		}
 
-		int numberOfComputers = computerService.numberOfComputers(filterByName);
+		// FILTER BY NAME
+		String filterByName = FormUtils.getFieldValue(request,
+				ATT_FILTER_BY_NAME);
+		if (filterByName == null) {
+			filterByName = DEFAULT_FILTER_BY_NAME;
+		}
 
-		int maxSheet = (int) Math.ceil(numberOfComputers
-				/ (double) IComputerService.LIMIT);
+		// SORTING
+		String sortedColumnStr = FormUtils.getFieldValue(request, ATT_SORTED_COLUMN);
+		int sortedColumn = initIntegerField(sortedColumnStr, DEFAULT_SORTED);
+		int sortedAbsolute = Math.abs(sortedColumn);
+		if (sortedAbsolute < SORTED_MIN || sortedAbsolute > SORTED_MAX) {
+			sortedColumn = DEFAULT_SORTED;
+		}
 
-		// PAGE PARAMETER
-		int currentSheet = initIntegerFieldBetween(request, ATT_CURRENT_SHEET,
-				1, 1, maxSheet);
-
-		// OFFSET FOR SQL QUERY
+		// OFFSET
 		int offset;
-		if (currentSheet == 1) {
+		if (currentPage == DEFAULT_CURRENT_PAGE) {
 			offset = 0;
 		} else {
-			offset = (currentSheet - 1) * IComputerService.LIMIT;
+			offset = (currentPage - 1) * IComputerService.LIMIT;
 		}
 
-		// SORTING PARAMETER
-		int sorted = initIntegerFieldBetweenAbsolute(request,
-				ATT_SORTED_COLUMN, 2, 2, 5);
+		// CALL THE SERVICE
+		Search search = computerService.getSearch(filterByName, sortedColumn, offset);
 
-		// LIST OF THE COMPUTERS
-		List<Computer> computers = computerService.sortedByColumn(filterByName,
-				sorted, IComputerService.LIMIT, offset);
+		int maxNumberOfPages = (int) Math.ceil(search.getNumberOfComputers()
+				/ (double) IComputerService.LIMIT);
 
 		// INDICES OF THE PAGES
-		int firstComputerIndice = (currentSheet - 1) * IComputerService.LIMIT;
+		int firstComputerIndice = (currentPage - 1) * IComputerService.LIMIT;
 		int lastComputerIndice = firstComputerIndice + IComputerService.LIMIT;
 
-		if (lastComputerIndice > numberOfComputers) {
-			lastComputerIndice = numberOfComputers;
+		if (lastComputerIndice > search.getNumberOfComputers()) {
+			lastComputerIndice = search.getNumberOfComputers();
 		}
 
 		// MESSAGE OF INSERT,UPDATE OR DELETE
@@ -91,61 +103,34 @@ public class ComputersController extends HttpServlet {
 		request.getSession().removeAttribute(AddComputerController.ATT_MESSAGE);
 
 		// TITLE OF THE PAGE
-		String title = numberOfComputers > 1 ? numberOfComputers
-				+ TITLE_GREATER_THAN_1
-				: numberOfComputers == 1 ? TITLE_EQUALS_1 : TITLE_NULL;
+		String title = search.getNumberOfComputers() > 1 ? search
+				.getNumberOfComputers() + TITLE_GREATER_THAN_1 : search
+				.getNumberOfComputers() == 1 ? TITLE_EQUALS_1 : TITLE_NULL;
 
 		// SET ATTRIBUTES TO THE REQUEST
 		request.setAttribute(ATT_TITLE, title);
 		request.setAttribute(AddComputerController.ATT_MESSAGE, message);
-		request.setAttribute(ATT_CURRENT_SHEET, currentSheet);
+		request.setAttribute(ATT_CURRENT_PAGE, currentPage);
 		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
-		request.setAttribute(ATT_SORTED_COLUMN, sorted);
-		request.setAttribute(ATT_MAX_SHEET, maxSheet);
+		request.setAttribute(ATT_SORTED_COLUMN, sortedColumn);
+		request.setAttribute(ATT_MAX_NUMBER_OF_PAGES, maxNumberOfPages);
 		request.setAttribute(ATT_FIRST_COMPUTER_INDICE, firstComputerIndice + 1);
 		request.setAttribute(ATT_LAST_COMPUTER_INDICE, lastComputerIndice);
-		request.setAttribute(ATT_NUMBER_OF_COMPUTERS, numberOfComputers);
-		request.setAttribute(ATT_COMPUTERS, computers);
+		request.setAttribute(ATT_NUMBER_OF_COMPUTERS,
+				search.getNumberOfComputers());
+		request.setAttribute(ATT_COMPUTERS, search.getComputers());
 
 		getServletContext().getRequestDispatcher(VIEW).forward(request,
 				response);
 	}
 
-	private static int initIntegerField(HttpServletRequest request,
-			String field, int defaultValue) {
-		String valueStr = request.getParameter(field);
-		Integer valueInt;
+	private static int initIntegerField(String field, int defaultValue) {
+		Integer value;
 		try {
-			valueInt = Integer.parseInt(valueStr);
+			value = Integer.parseInt(field);
 		} catch (NumberFormatException e) {
-			valueInt = defaultValue;
+			value = defaultValue;
 		}
-		return valueInt;
-	}
-
-	private static int initIntegerFieldBetween(HttpServletRequest request,
-			String field, int defaultValue, int min, int max) {
-		Integer valueInt = initIntegerField(request, field, defaultValue);
-		if (isBetween(valueInt, min, max)) {
-			valueInt = defaultValue;
-		}
-		return valueInt;
-	}
-
-	private static int initIntegerFieldBetweenAbsolute(
-			HttpServletRequest request, String field, int defaultValue,
-			int min, int max) {
-		Integer valueInt = initIntegerField(request, field, defaultValue);
-		if (isBetween(Math.abs(valueInt), min, max)) {
-			valueInt = defaultValue;
-		}
-		return valueInt;
-	}
-
-	private static boolean isBetween(int value, int min, int max) {
-		if (value < min || value > max) {
-			return true;
-		}
-		return false;
+		return value;
 	}
 }

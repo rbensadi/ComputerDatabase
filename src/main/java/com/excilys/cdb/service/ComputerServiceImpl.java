@@ -5,6 +5,7 @@ import java.util.List;
 import com.excilys.cdb.dao.ComputerDaoImpl;
 import com.excilys.cdb.dao.IComputerDao;
 import com.excilys.cdb.pojo.Computer;
+import com.excilys.cdb.pojo.Search;
 
 public enum ComputerServiceImpl implements IComputerService {
 
@@ -57,4 +58,14 @@ public enum ComputerServiceImpl implements IComputerService {
 				IComputerDao.COLUMS_NAME_ID[absoluteColumnId], order, limit,
 				offset);
 	}
+
+	public Search getSearch(String filterByName, int sorted, int offset) {
+		Search search = new Search();
+
+		search.setNumberOfComputers(numberOfComputers(filterByName));
+		search.setComputers(sortedByColumn(filterByName, sorted, LIMIT, offset));
+
+		return search;
+	}
+
 }

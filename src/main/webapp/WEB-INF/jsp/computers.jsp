@@ -36,7 +36,7 @@
 		</div>
 		
 		<c:choose>
-			<c:when test="${ numberOfComputers > 0 }">
+			<c:when test="${ numberOfComputers > 0 && p <= maxNumberOfPages }">
 				<table class="computers zebra-striped">
 					<thead>
 						<tr>
@@ -97,7 +97,7 @@
 						</c:choose>
 						<li class="current"><a>Displaying ${ firstComputerIndice } to ${ lastComputerIndice } of ${ numberOfComputers }</a></li>
 						<c:choose>
-							<c:when test="${ p == maxSheet }">
+							<c:when test="${ p == maxNumberOfPages }">
 								<li class="next disabled"><a>Next &rarr;</a></li>
 							</c:when>
 							<c:otherwise>
