@@ -50,7 +50,7 @@ public class ComputersController extends HttpServlet {
 				/ (double) IComputerService.LIMIT);
 
 		int currentSheet = initIntegerFieldBetween(request, ATT_CURRENT_SHEET,
-				1, 1, maxSheet + 1);
+				1, 1, maxSheet);
 
 		// Count of the offset for the computers list
 		int offset;
@@ -140,7 +140,7 @@ public class ComputersController extends HttpServlet {
 	}
 
 	private static boolean isBetween(int value, int min, int max) {
-		if (value <= min || value >= max) {
+		if (value < min || value > max) {
 			return true;
 		}
 		return false;
