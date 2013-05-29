@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.cdb.form.AForm;
 import com.excilys.cdb.form.CrudComputerForm;
+import com.excilys.cdb.form.FormUtils;
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
 import com.excilys.cdb.service.CompanyServiceImpl;
@@ -37,8 +38,19 @@ public class UpdateComputerController extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
+		String idStr = FormUtils.getFieldValue(request,
+				CrudComputerForm.FIELD_ID);
+		Integer id;
+		Computer computer;
+		try {
+			id = Integer.parseInt(idStr);
+			computer = computerService.findById(id);
+		} catch (NumberFormatException e) {
+			computer = null;
+		}
+
 		CrudComputerForm form = new CrudComputerForm();
-		Computer computer = form.getComputer(request);
+		form.setComputer(computer);
 
 		if (computer != null) {
 			List<Company> companies = companyService.list();

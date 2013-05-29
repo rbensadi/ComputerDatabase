@@ -61,6 +61,11 @@ public class AddComputerController extends HttpServlet {
 		CrudComputerForm form = new CrudComputerForm();
 		Computer computer = form.computerCrudValidation(request);
 
+		if (computer.getCompany() != null) {
+			Company company = companyService.findById(computer.getCompany().getId());
+			computer.setCompany(company);
+		}
+
 		if (form.isValid()) {
 			computerService.insert(computer);
 			StringBuilder sb = new StringBuilder();

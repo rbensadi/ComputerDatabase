@@ -10,10 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
-import com.excilys.cdb.service.CompanyServiceImpl;
-import com.excilys.cdb.service.ComputerServiceImpl;
-import com.excilys.cdb.service.ICompanyService;
-import com.excilys.cdb.service.IComputerService;
 
 public class CrudComputerForm extends AForm {
 
@@ -29,12 +25,7 @@ public class CrudComputerForm extends AForm {
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd",
 			Locale.FRANCE);
 
-	private IComputerService computerService;
-	private ICompanyService companyService;
-
 	public CrudComputerForm() {
-		computerService = ComputerServiceImpl.INSTANCE;
-		companyService = CompanyServiceImpl.INSTANCE;
 	}
 
 	public Computer computerCrudValidation(HttpServletRequest request) {
@@ -69,20 +60,9 @@ public class CrudComputerForm extends AForm {
 		return computer;
 	}
 
-	public Computer getComputer(HttpServletRequest request) {
-		String idStr = FormUtils.getFieldValue(request, FIELD_ID);
-
-		Integer id;
-		try {
-			id = Integer.parseInt(idStr);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-
-		Computer computer = computerService.findById(id);
-
+	public void setComputer(Computer computer) {
 		if (computer == null) {
-			return null;
+			return;
 		}
 
 		fields.put(FIELD_NAME, computer.getName());
@@ -100,8 +80,6 @@ public class CrudComputerForm extends AForm {
 			fields.put(FIELD_COMPANY,
 					String.valueOf(computer.getCompany().getId()));
 		}
-
-		return computer;
 	}
 
 	private void nameProcess(Computer computer, String name) {
@@ -211,11 +189,8 @@ public class CrudComputerForm extends AForm {
 					"AddComputerForm@companyValidation() : The company id is not an int.");
 		}
 
-		companyObject = companyService.findById(id);
-		if (companyObject == null) {
-			throw new FormValidationException(
-					"AddComputerForm@companyValidation() : The company does not exist.");
-		}
+		companyObject = new Company();
+		companyObject.setId(id);
 
 		return companyObject;
 	}
