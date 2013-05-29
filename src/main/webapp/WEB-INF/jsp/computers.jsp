@@ -19,7 +19,7 @@
 	
 	<section id="main">
 	
-		<h1>${ numberOfComputers > 0 ? numberOfComputers : 'No' } computers found</h1>
+		<h1>${ title }</h1>
 		
 		<c:if test="${ message != null }">
 			<div class="alert-message warning">

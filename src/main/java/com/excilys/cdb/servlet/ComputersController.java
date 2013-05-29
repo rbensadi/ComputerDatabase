@@ -29,6 +29,11 @@ public class ComputersController extends HttpServlet {
 	private static final String ATT_LAST_COMPUTER_INDICE = "lastComputerIndice";
 	private static final String ATT_NUMBER_OF_COMPUTERS = "numberOfComputers";
 	private static final String ATT_COMPUTERS = "computers";
+	private static final String ATT_TITLE = "title";
+
+	private static final String TITLE_GREATER_THAN_1 = " computers found";
+	private static final String TITLE_EQUALS_1 = "1 computer found";
+	private static final String TITLE_NULL = " No computers found";
 
 	private IComputerService computerService;
 
@@ -41,18 +46,22 @@ public class ComputersController extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
+		// FILTER PARAMETER
 		String filterByName = (String) request.getParameter(ATT_FILTER_BY_NAME);
 		if (filterByName == null) {
 			filterByName = "";
 		}
+
 		int numberOfComputers = computerService.numberOfComputers(filterByName);
+
 		int maxSheet = (int) Math.ceil(numberOfComputers
 				/ (double) IComputerService.LIMIT);
 
+		// PAGE PARAMETER
 		int currentSheet = initIntegerFieldBetween(request, ATT_CURRENT_SHEET,
 				1, 1, maxSheet);
 
-		// Count of the offset for the computers list
+		// OFFSET FOR SQL QUERY
 		int offset;
 		if (currentSheet == 1) {
 			offset = 0;
@@ -60,27 +69,15 @@ public class ComputersController extends HttpServlet {
 			offset = (currentSheet - 1) * IComputerService.LIMIT;
 		}
 
-		// Set the value of the sorted column
-		// String sortedString = (String)
-		// request.getParameter(ATT_SORTED_COLUMN);
-		// int sorted;
-		//
-		// if (sortedString == null) {
-		// sorted = 2;
-		// } else {
-		// try {
-		// sorted = Integer.parseInt(sortedString);
-		// } catch (NumberFormatException nfe) {
-		// sorted = 2;
-		// }
-		// }
+		// SORTING PARAMETER
 		int sorted = initIntegerFieldBetweenAbsolute(request,
 				ATT_SORTED_COLUMN, 2, 2, 5);
 
-		// Getting the good list of computers
+		// LIST OF THE COMPUTERS
 		List<Computer> computers = computerService.sortedByColumn(filterByName,
 				sorted, IComputerService.LIMIT, offset);
 
+		// INDICES OF THE PAGES
 		int firstComputerIndice = (currentSheet - 1) * IComputerService.LIMIT;
 		int lastComputerIndice = firstComputerIndice + IComputerService.LIMIT;
 
@@ -88,12 +85,18 @@ public class ComputersController extends HttpServlet {
 			lastComputerIndice = numberOfComputers;
 		}
 
-		// Get the computer if added in the session and delete it
+		// MESSAGE OF INSERT,UPDATE OR DELETE
 		String message = (String) request.getSession().getAttribute(
 				AddComputerController.ATT_MESSAGE);
 		request.getSession().removeAttribute(AddComputerController.ATT_MESSAGE);
 
-		// Set attributes to the request
+		// TITLE OF THE PAGE
+		String title = numberOfComputers > 1 ? numberOfComputers
+				+ TITLE_GREATER_THAN_1
+				: numberOfComputers == 1 ? TITLE_EQUALS_1 : TITLE_NULL;
+
+		// SET ATTRIBUTES TO THE REQUEST
+		request.setAttribute(ATT_TITLE, title);
 		request.setAttribute(AddComputerController.ATT_MESSAGE, message);
 		request.setAttribute(ATT_CURRENT_SHEET, currentSheet);
 		request.setAttribute(ATT_FILTER_BY_NAME, filterByName);
