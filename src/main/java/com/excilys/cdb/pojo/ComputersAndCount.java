@@ -2,7 +2,7 @@ package com.excilys.cdb.pojo;
 
 import java.util.List;
 
-public class Search {
+public class ComputersAndCount {
 
 	private int numberOfComputers;
 	private List<Computer> computers;

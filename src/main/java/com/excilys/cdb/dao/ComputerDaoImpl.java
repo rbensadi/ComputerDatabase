@@ -56,7 +56,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		} catch (SQLException e) {
 			throw new DaoException("ComputerDao@insert() failed !", e);
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
+			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
 
 		return id;
@@ -79,7 +79,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		} catch (SQLException e) {
 			throw new DaoException("ComputerDao@findById() failed !", e);
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
+			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
 
 		return computer;
@@ -107,7 +107,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		} catch (SQLException e) {
 			throw new DaoException("ComputerDao@list() failed !", e);
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
+			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
 
 		return count;
@@ -133,7 +133,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		} catch (SQLException e) {
 			throw new DaoException("ComputerDao@update() failed !", e);
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement);
+			DaoUtils.silentClosing(preparedStatement);
 		}
 	}
 
@@ -152,7 +152,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		} catch (SQLException e) {
 			throw new DaoException("ComputerDao@deleteById() failed !", e);
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement);
+			DaoUtils.silentClosing(preparedStatement);
 		}
 	}
 
@@ -180,7 +180,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		} catch (SQLException e) {
 			throw new DaoException("ComputerDao@sortedByColumn() failed !", e);
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
+			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
 
 		return computers;
@@ -222,4 +222,5 @@ public enum ComputerDaoImpl implements IComputerDao {
 
 		return computer;
 	}
+
 }

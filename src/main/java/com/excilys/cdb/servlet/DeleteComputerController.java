@@ -31,7 +31,7 @@ public class DeleteComputerController extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		Integer id = Integer.parseInt(FormUtils.getFieldValue(request,
 				CrudComputerForm.FIELD_ID));
-		computerService.deleteById(id);
+		computerService.delete(id);
 		request.getSession().setAttribute(AddComputerController.ATT_MESSAGE,
 				MESSAGE);
 		response.sendRedirect(AddComputerController.REDIRECT_VIEW);

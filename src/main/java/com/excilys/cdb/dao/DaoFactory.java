@@ -21,8 +21,11 @@ public enum DaoFactory {
 	private String driver;
 	private String user;
 	private String password;
+	private ThreadLocal<Connection> threadLocalConnection;
 
 	private DaoFactory() {
+		threadLocalConnection = new ThreadLocal<Connection>();
+
 		Properties properties = new Properties();
 
 		ClassLoader classLoader = Thread.currentThread()
@@ -55,13 +58,20 @@ public enum DaoFactory {
 	}
 
 	public Connection getConnection() {
-		Connection connection = null;
-		try {
-			connection = DriverManager.getConnection(url, user, password);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		Connection connection = threadLocalConnection.get();
+		if (connection == null) {
+			try {
+				connection = DriverManager.getConnection(url, user, password);
+				threadLocalConnection.set(connection);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return connection;
 	}
 
+	public void closeConnection() {
+		DaoUtils.silentClosing(threadLocalConnection.get());
+		threadLocalConnection.remove();
+	}
 }

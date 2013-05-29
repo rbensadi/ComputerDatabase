@@ -39,7 +39,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 		} catch (SQLException e) {
 			throw new DaoException("CompanyDao@findById() failed !", e);
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
+			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
 
 		return company;
@@ -62,7 +62,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 		} catch (SQLException e) {
 
 		} finally {
-			DaoUtils.silentClosing(connection, preparedStatement, resultSet);
+			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
 
 		return companies;

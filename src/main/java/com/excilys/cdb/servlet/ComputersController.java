@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.cdb.form.FormUtils;
-import com.excilys.cdb.pojo.Search;
+import com.excilys.cdb.pojo.ComputersAndCount;
 import com.excilys.cdb.service.ComputerServiceImpl;
 import com.excilys.cdb.service.IComputerService;
 
@@ -84,7 +84,7 @@ public class ComputersController extends HttpServlet {
 		}
 
 		// CALL THE SERVICE
-		Search search = computerService.getSearch(filterByName, sortedColumn, offset);
+		ComputersAndCount search = computerService.getComputersAndCount(filterByName, sortedColumn, offset);
 
 		int maxNumberOfPages = (int) Math.ceil(search.getNumberOfComputers()
 				/ (double) IComputerService.LIMIT);

@@ -3,7 +3,7 @@ package com.excilys.cdb.service;
 import java.util.List;
 
 import com.excilys.cdb.pojo.Computer;
-import com.excilys.cdb.pojo.Search;
+import com.excilys.cdb.pojo.ComputersAndCount;
 
 public interface IComputerService {
 
@@ -13,14 +13,15 @@ public interface IComputerService {
 
 	Computer findById(int id);
 
-	int numberOfComputers(String filter);
+	int numberOfComputers(String filterByName);
 
 	void update(Computer computer);
 
-	void deleteById(int id);
+	void delete(int id);
 
 	List<Computer> list(String filterByName, int sortedColumn, int limit,
 			int offset);
 
-	Search getSearch(String filterByName, int sorted, int offset);
+	ComputersAndCount getComputersAndCount(String filterByName, int sorted,
+			int offset);
 }
