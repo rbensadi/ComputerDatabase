@@ -17,15 +17,14 @@ public interface IComputerDao {
 
 	int insert(Computer computer);
 
-	Computer findById(int id);
+	Computer find(int id);
 
 	int numberOfComputers(String filter);
 
 	void update(Computer computer);
 
-	void deleteById(int id);
+	void delete(int id);
 
-
-	List<Computer> sortedByColumn(String filter, String columnName, String order, int limit,
-			int offset);
+	List<Computer> list(String filterByName, String sortedColumn, String order,
+			int limit, int offset);
 }

@@ -62,7 +62,7 @@ public class AddComputerController extends HttpServlet {
 		Computer computer = form.computerCrudValidation(request);
 
 		if (computer.getCompany() != null) {
-			Company company = companyService.findById(computer.getCompany().getId());
+			Company company = companyService.find(computer.getCompany().getId());
 			computer.setCompany(company);
 		}
 

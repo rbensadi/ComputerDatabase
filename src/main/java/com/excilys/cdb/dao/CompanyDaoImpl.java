@@ -13,7 +13,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 
 	INSTANCE;
 
-	private static final String SQL_FIND_BY_ID = "SELECT id,name FROM company WHERE id = ?";
+	private static final String SQL_FIND = "SELECT id,name FROM company WHERE id = ?";
 	private static final String SQL_LIST = "SELECT id,name FROM company ORDER BY name";
 
 	private DaoFactory daoFactory;
@@ -22,7 +22,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 		this.daoFactory = DaoFactory.INSTANCE;
 	}
 
-	public Company findById(int id) {
+	public Company find(int id) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -31,7 +31,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 		connection = daoFactory.getConnection();
 		try {
 			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					SQL_FIND_BY_ID, false, id);
+					SQL_FIND, false, id);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				company = map(resultSet);

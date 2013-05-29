@@ -9,8 +9,7 @@ public interface ICompanyDao {
 	String ID_FIELD = "company.id";
 	String NAME_FIELD = "company.name";
 
-	Company findById(int id);
+	Company find(int id);
 	
 	List<Company> list();
-
 }

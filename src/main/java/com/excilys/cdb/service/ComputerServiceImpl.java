@@ -22,7 +22,7 @@ public enum ComputerServiceImpl implements IComputerService {
 	}
 
 	public Computer findById(int id) {
-		return computerDao.findById(id);
+		return computerDao.find(id);
 	}
 
 	public int numberOfComputers(String filter) {
@@ -34,15 +34,15 @@ public enum ComputerServiceImpl implements IComputerService {
 	}
 
 	public void deleteById(int id) {
-		computerDao.deleteById(id);
+		computerDao.delete(id);
 	}
 
-	public List<Computer> sortedByColumn(String filter, int columnId,
+	public List<Computer> list(String filterByName, int sortedColumn,
 			int limit, int offset) {
-		int absoluteColumnId = Math.abs(columnId);
-		String order = columnId < 0 ? "DESC" : "ASC";
+		int absoluteColumnId = Math.abs(sortedColumn);
+		String order = sortedColumn < 0 ? "DESC" : "ASC";
 
-		return computerDao.sortedByColumn(filter,
+		return computerDao.list(filterByName,
 				IComputerDao.COLUMS_NAME_ID[absoluteColumnId], order, limit,
 				offset);
 	}
@@ -51,7 +51,7 @@ public enum ComputerServiceImpl implements IComputerService {
 		Search search = new Search();
 
 		search.setNumberOfComputers(numberOfComputers(filterByName));
-		search.setComputers(sortedByColumn(filterByName, sorted, LIMIT, offset));
+		search.setComputers(list(filterByName, sorted, LIMIT, offset));
 
 		return search;
 	}

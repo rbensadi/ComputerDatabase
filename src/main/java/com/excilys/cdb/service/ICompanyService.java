@@ -6,7 +6,7 @@ import com.excilys.cdb.pojo.Company;
 
 public interface ICompanyService {
 
-	Company findById(int id);
+	Company find(int id);
 	
 	List<Company> list();
 	

@@ -16,8 +16,8 @@ public enum CompanyServiceImpl implements ICompanyService {
 		companyDao = CompanyDaoImpl.INSTANCE;
 	}
 
-	public Company findById(int id) {
-		return companyDao.findById(id);
+	public Company find(int id) {
+		return companyDao.find(id);
 	}
 
 	public List<Company> list() {

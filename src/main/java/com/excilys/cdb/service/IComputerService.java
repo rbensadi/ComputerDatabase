@@ -19,7 +19,7 @@ public interface IComputerService {
 
 	void deleteById(int id);
 
-	List<Computer> sortedByColumn(String filter, int columnId, int limit,
+	List<Computer> list(String filterByName, int sortedColumn, int limit,
 			int offset);
 
 	Search getSearch(String filterByName, int sorted, int offset);
