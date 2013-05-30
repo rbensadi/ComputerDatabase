@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
 
 public enum ComputerDaoImpl implements IComputerDao {
@@ -14,20 +15,18 @@ public enum ComputerDaoImpl implements IComputerDao {
 	INSTANCE;
 
 	private static final String SQL_INSERT = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
-	private static final String SQL_FIND = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE id = ?";
+	private static final String SQL_FIND = "SELECT computer.id,computer.name,computer.introduced,computer.discontinued,company.id AS companyId,company.name AS companyName FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?";
 	private static final String SQL_COUNT = "SELECT COUNT(*) FROM computer WHERE name LIKE ?";
 	private static final String SQL_UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM computer where id = ?";
-	private static final String SQL_LIST_PART1 = "SELECT computer.id,computer.name,computer.introduced,computer.discontinued,computer.company_id FROM computer";
+	private static final String SQL_LIST_PART1 = "SELECT computer.id,computer.name,computer.introduced,computer.discontinued,company.id AS companyId,company.name AS companyName FROM computer LEFT JOIN company ON computer.company_id = company.id";
 	private static final String SQL_LIST_PART2 = " WHERE computer.name LIKE ? ORDER BY ISNULL(";
 	private static final String SQL_LIST_PART3 = " LIMIT ? OFFSET ?";
 
 	private DaoFactory daoFactory;
-	private ICompanyDao companyDao;
 
 	private ComputerDaoImpl() {
 		daoFactory = DaoFactory.INSTANCE;
-		companyDao = CompanyDaoImpl.INSTANCE;
 	}
 
 	public int insert(Computer computer) {
@@ -77,7 +76,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 				computer = map(resultSet);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@findById() failed !", e);
+			throw new DaoException("ComputerDao@find() failed !", e);
 		} finally {
 			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
@@ -85,7 +84,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		return computer;
 	}
 
-	public int numberOfComputers(String filter) {
+	public int numberOfComputers(String filterByName) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -93,7 +92,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("%");
-		sb.append(filter);
+		sb.append(filterByName);
 		sb.append("%");
 
 		connection = daoFactory.getConnection();
@@ -105,7 +104,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 				count = resultSet.getInt(1);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@list() failed !", e);
+			throw new DaoException("ComputerDao@numberOfComputers() failed !", e);
 		} finally {
 			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
@@ -147,10 +146,10 @@ public enum ComputerDaoImpl implements IComputerDao {
 					SQL_DELETE, false, id);
 			int result = preparedStatement.executeUpdate();
 			if (result != 1) {
-				throw new DaoException("ComputerDao@deleteById() failed !");
+				throw new DaoException("ComputerDao@delete() failed !");
 			}
 		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@deleteById() failed !", e);
+			throw new DaoException("ComputerDao@delete() failed !", e);
 		} finally {
 			DaoUtils.silentClosing(preparedStatement);
 		}
@@ -178,7 +177,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 				computers.add(map(resultSet));
 			}
 		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@sortedByColumn() failed !", e);
+			throw new DaoException("ComputerDao@list() failed !", e);
 		} finally {
 			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
@@ -216,8 +215,10 @@ public enum ComputerDaoImpl implements IComputerDao {
 		if (o == null) {
 			computer.setCompany(null);
 		} else {
-			computer.setCompany(companyDao.find(resultSet
-					.getInt(ID_COMPANY_FIELD)));
+			Company company = new Company();
+			company.setId(resultSet.getInt(ID_COMPANY_FIELD));
+			company.setName(resultSet.getString(NAME_COMPANY_FIELD));
+			computer.setCompany(company);
 		}
 
 		return computer;
