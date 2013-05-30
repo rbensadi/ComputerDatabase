@@ -25,6 +25,10 @@ public class CrudComputerForm extends AForm {
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd",
 			Locale.FRANCE);
 
+	static {
+		df.setLenient(false);
+	}
+
 	public CrudComputerForm() {
 	}
 
@@ -143,18 +147,9 @@ public class CrudComputerForm extends AForm {
 			return null;
 		}
 		Date date = null;
-		String format;
-		boolean valid = true;
 		try {
 			date = df.parse(dateStr);
-			format = df.format(date);
-			if (!format.equals(dateStr)) {
-				valid = false;
-			}
 		} catch (ParseException e) {
-			valid = false;
-		}
-		if (!valid) {
 			throw new FormValidationException(errorMessage);
 		}
 		return date;
