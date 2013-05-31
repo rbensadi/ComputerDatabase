@@ -5,7 +5,7 @@
 <html>
 <head>
 	<title>Computers database</title>
-	<c:import url="/WEB-INF/jsp/stylesheets.jsp"></c:import>
+	<c:import url="/WEB-INF/imports/stylesheets.jsp"></c:import>
 </head>
 <body>
 

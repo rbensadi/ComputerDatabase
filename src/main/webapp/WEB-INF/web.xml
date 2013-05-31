@@ -2,33 +2,11 @@
 <web-app id="WebApp_ID" version="2.4"
 	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-	<servlet>
-		<description>
-		</description>
-		<display-name>UpdateDeleteComputerController</display-name>
-		<servlet-name>UpdateDeleteComputerController</servlet-name>
-		<servlet-class>com.excilys.cdb.servlet.UpdateDeleteComputerController</servlet-class>
-	</servlet>
-	<servlet>
-		<description>
-		</description>
-		<display-name>DeleteComputerController</display-name>
-		<servlet-name>DeleteComputerController</servlet-name>
-		<servlet-class>com.excilys.cdb.servlet.DeleteComputerController</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>UpdateDeleteComputerController</servlet-name>
-		<url-pattern>/UpdateDeleteComputerController</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DeleteComputerController</servlet-name>
-		<url-pattern>/DeleteComputerController</url-pattern>
-	</servlet-mapping>
 
 	<jsp-config>
 		<jsp-property-group>
 			<url-pattern>*.jsp</url-pattern>
-			<include-prelude>/WEB-INF/jsp/taglibs.jsp</include-prelude>
+			<include-prelude>/WEB-INF/imports/taglibs.jsp</include-prelude>
 		</jsp-property-group>
 	</jsp-config>
 
