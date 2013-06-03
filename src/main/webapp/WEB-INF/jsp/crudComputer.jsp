@@ -20,25 +20,25 @@
 		<form action="<c:url value="/computers/${ showDelete ? 'new' : 'edit?id='.concat(computer.id) }"/>" method="POST">
 			<fieldset>
 			
-				<div class="clearfix ${ empty form.errors || form.errors['name'] ? '' : 'error'}">
+				<div class="clearfix ${ empty form.fields || form.fields['name'].valid ? '' : 'error'}">
 					<label for="name">Computer name</label>
 					<div class="input">
-						<input type="text" id="name" name="name" value="${ form.fields['name'] }"> <span class="help-inline">Required</span>
+						<input type="text" id="name" name="name" value="${ form.fields['name'].value }"> <span class="help-inline">Required</span>
 					</div>
 				</div> 
 				
-				<div class="clearfix ${ empty form.errors || form.errors['introduced'] ? '' : 'error'}">
+				<div class="clearfix ${ empty form.fields || form.fields['introduced'].valid ? '' : 'error'}">
 					<label for="introduced">Introduced date</label>
 					<div class="input">
-						<input type="text" id="introduced" name="introduced" value="${ form.fields['introduced'] }">
+						<input type="text" id="introduced" name="introduced" value="${ form.fields['introduced'].value }">
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
 				</div>
 				
-				<div class="clearfix ${ empty form.errors || form.errors['discontinued'] ? '' : 'error'}">
+				<div class="clearfix ${ empty form.fields || form.fields['discontinued'].valid ? '' : 'error'}">
 					<label for="discontinued">Discontinued date</label>
 					<div class="input">
-						<input type="text" id="discontinued" name="discontinued" value="${ form.fields['discontinued'] }">
+						<input type="text" id="discontinued" name="discontinued" value="${ form.fields['discontinued'].value }">
 						<span class="help-inline">Date (&#x27;yyyy-MM-dd&#x27;)</span>
 					</div>
 				</div>
@@ -49,7 +49,7 @@
 						<select id="company" name="company">
 							<option class="blank" value="">-- Choose a company --</option>
 							<c:forEach var="company" items="${ companies }">
-								<option value="${ company.id }" ${ form.fields['company'] == company.id ? 'selected' : '' }>${ company.name }</option>
+								<option value="${ company.id }" ${ form.fields['company'].value == company.id ? 'selected' : '' }>${ company.name }</option>
 							</c:forEach>
 						</select>
 						

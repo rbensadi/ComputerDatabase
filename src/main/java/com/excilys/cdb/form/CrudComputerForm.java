@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
+import com.excilys.cdb.pojo.FormElement;
 
 public class CrudComputerForm extends AForm {
 
@@ -49,7 +50,8 @@ public class CrudComputerForm extends AForm {
 		if (computer.getIntroduced() != null
 				&& computer.getDiscontinued() != null) {
 			if (computer.getIntroduced().compareTo(computer.getDiscontinued()) > 0) {
-				errors.put(FIELD_DISCONTINUED, false);
+				fields.put(FIELD_DISCONTINUED, new FormElement(discontinued,
+						false));
 			}
 		}
 
@@ -69,33 +71,42 @@ public class CrudComputerForm extends AForm {
 			return;
 		}
 
-		fields.put(FIELD_NAME, computer.getName());
+		putFormElement(FIELD_NAME, computer.getName(), true);
 
 		if (computer.getIntroduced() != null) {
-			fields.put(FIELD_INTRODUCED, df.format(computer.getIntroduced()));
+			putFormElement(FIELD_INTRODUCED,
+					df.format(computer.getIntroduced()), true);
+		} else {
+			putFormElement(FIELD_INTRODUCED, null, true);
 		}
 
 		if (computer.getDiscontinued() != null) {
-			fields.put(FIELD_DISCONTINUED,
-					df.format(computer.getDiscontinued()));
+			putFormElement(FIELD_DISCONTINUED,
+					df.format(computer.getDiscontinued()), true);
+		} else {
+			putFormElement(FIELD_DISCONTINUED, null, true);
 		}
 
 		if (computer.getCompany() != null) {
-			fields.put(FIELD_COMPANY,
-					String.valueOf(computer.getCompany().getId()));
+			putFormElement(FIELD_COMPANY,
+					String.valueOf(computer.getCompany().getId()), true);
+		} else {
+			putFormElement(FIELD_COMPANY, null, true);
 		}
+	}
+
+	private void putFormElement(String field, String value, boolean valid) {
+		fields.put(field, new FormElement(value, valid));
 	}
 
 	private void nameProcess(Computer computer, String name) {
 		try {
 			nameValidation(name);
+			computer.setName(name);
+			fields.put(FIELD_NAME, new FormElement(name, true));
 		} catch (FormValidationException e) {
-			errors.put(FIELD_NAME, false);
-			return;
+			fields.put(FIELD_NAME, new FormElement(name, false));
 		}
-		computer.setName(name);
-		fields.put(FIELD_NAME, name);
-		errors.put(FIELD_NAME, true);
 	}
 
 	private void nameValidation(String name) throws FormValidationException {
@@ -109,36 +120,30 @@ public class CrudComputerForm extends AForm {
 		Date date = null;
 		try {
 			date = dateValidation(introduced, INTRODUCED_ERROR_MESSAGE);
+			if (date != null) {
+				computer.setIntroduced(new java.sql.Date(date.getTime()));
+			} else {
+				computer.setIntroduced(null);
+			}
+			fields.put(FIELD_INTRODUCED, new FormElement(introduced, true));
 		} catch (FormValidationException e) {
-			fields.put(FIELD_INTRODUCED, introduced);
-			errors.put(FIELD_INTRODUCED, false);
-			return;
+			fields.put(FIELD_INTRODUCED, new FormElement(introduced, false));
 		}
-		try {
-			computer.setIntroduced(new java.sql.Date(date.getTime()));
-		} catch (Exception e) {
-			computer.setIntroduced(null);
-		}
-		fields.put(FIELD_INTRODUCED, introduced);
-		errors.put(FIELD_INTRODUCED, true);
 	}
 
 	private void discontinuedProcess(Computer computer, String discontinued) {
 		Date date = null;
 		try {
 			date = dateValidation(discontinued, DISCONTINUED_ERROR_MESSAGE);
+			if (date != null) {
+				computer.setDiscontinued(new java.sql.Date(date.getTime()));
+			} else {
+				computer.setDiscontinued(null);
+			}
+			fields.put(FIELD_DISCONTINUED, new FormElement(discontinued, true));
 		} catch (FormValidationException e) {
-			fields.put(FIELD_DISCONTINUED, discontinued);
-			errors.put(FIELD_DISCONTINUED, false);
-			return;
+			fields.put(FIELD_DISCONTINUED, new FormElement(discontinued, false));
 		}
-		try {
-			computer.setDiscontinued(new java.sql.Date(date.getTime()));
-		} catch (Exception e) {
-			computer.setDiscontinued(null);
-		}
-		fields.put(FIELD_DISCONTINUED, discontinued);
-		errors.put(FIELD_DISCONTINUED, true);
 	}
 
 	private Date dateValidation(String dateStr, String errorMessage)
@@ -159,13 +164,11 @@ public class CrudComputerForm extends AForm {
 		Company companyObject = null;
 		try {
 			companyObject = companyValidation(company);
+			computer.setCompany(companyObject);
+			fields.put(FIELD_COMPANY, new FormElement(company, true));
 		} catch (FormValidationException e) {
-			errors.put(FIELD_COMPANY, false);
-			return;
+			fields.put(FIELD_COMPANY, new FormElement(company, false));
 		}
-		computer.setCompany(companyObject);
-		fields.put(FIELD_COMPANY, company);
-		errors.put(FIELD_COMPANY, true);
 	}
 
 	private Company companyValidation(String company)
