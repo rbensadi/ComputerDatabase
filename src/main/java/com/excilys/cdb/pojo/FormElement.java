@@ -10,9 +10,8 @@ public class FormElement {
 	}
 
 	public FormElement(String value, boolean valid) {
-		super();
-		this.value = value;
-		this.valid = valid;
+		setValue(value);
+		setValid(valid);
 	}
 
 	public String getValue() {

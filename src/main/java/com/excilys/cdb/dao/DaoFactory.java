@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public enum DaoFactory {
-
 	INSTANCE;
 
 	private static final String PROPERTIES_FILE = "/com/excilys/cdb/dao/dao.properties";
@@ -34,8 +33,11 @@ public enum DaoFactory {
 				.getResourceAsStream(PROPERTIES_FILE);
 
 		if (fichierProperties == null) {
-			throw new DaoConfigurationException("Le fichier properties "
-					+ PROPERTIES_FILE + " est introuvable.");
+			StringBuilder sb = new StringBuilder();
+			sb.append("The properties file ");
+			sb.append(PROPERTIES_FILE);
+			sb.append(" is unfindable !");
+			throw new DaoConfigurationException(sb.toString());
 		}
 
 		try {
@@ -45,9 +47,10 @@ public enum DaoFactory {
 			user = properties.getProperty(PROPERTY_USER);
 			password = properties.getProperty(PROPERTY_PASSWORD);
 		} catch (IOException e) {
-			throw new DaoConfigurationException(
-					"Impossible de charger le fichier properties "
-							+ PROPERTIES_FILE, e);
+			StringBuilder sb = new StringBuilder();
+			sb.append("Impossible to load the proterties file ");
+			sb.append(PROPERTIES_FILE);
+			throw new DaoConfigurationException(sb.toString(), e);
 		}
 
 		try {

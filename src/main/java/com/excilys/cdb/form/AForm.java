@@ -8,8 +8,6 @@ import com.excilys.cdb.pojo.FormElement;
 public abstract class AForm {
 
 	public static final String ATT_FORM = "form";
-	public static final String ATT_FIELDS = "fields";
-	public static final String ATT_ERRORS = "errors";
 
 	protected Map<String, FormElement> fields = new HashMap<String, FormElement>();
 

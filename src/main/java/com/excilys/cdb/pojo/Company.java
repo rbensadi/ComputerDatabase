@@ -5,6 +5,15 @@ public class Company {
 	private int id;
 	private String name;
 
+	public Company() {
+		// Do nothing...
+	}
+
+	public Company(int id, String name) {
+		setId(id);
+		setName(name);
+	}
+
 	public int getId() {
 		return id;
 	}

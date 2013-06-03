@@ -11,15 +11,15 @@ public class Computer {
 	private Company company;
 
 	public Computer() {
-
+		// Do nothing...
 	}
 
 	public Computer(String name, Date introduced, Date disontinued,
 			Company company) {
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = disontinued;
-		this.company = company;
+		setName(name);
+		setIntroduced(introduced);
+		setDiscontinued(disontinued);
+		setCompany(company);
 	}
 
 	public int getId() {
