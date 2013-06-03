@@ -30,9 +30,6 @@ public class CrudComputerForm extends AForm {
 		df.setLenient(false);
 	}
 
-	public CrudComputerForm() {
-	}
-
 	public Computer computerCrudValidation(HttpServletRequest request) {
 		String name = FormUtils.getFieldValue(request, FIELD_NAME);
 		String introduced = FormUtils.getFieldValue(request, FIELD_INTRODUCED);
