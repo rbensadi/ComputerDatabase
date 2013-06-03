@@ -22,7 +22,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 		this.daoFactory = DaoFactory.INSTANCE;
 	}
 
-	public Company find(int id) {
+	public Company find(int id) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -37,7 +37,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 				company = map(resultSet);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("CompanyDao@findById() failed !", e);
+			throw new DaoException("CompanyDao@find() failed !", e);
 		} finally {
 			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}
@@ -45,7 +45,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 		return company;
 	}
 
-	public List<Company> list() {
+	public List<Company> list() throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -60,7 +60,7 @@ public enum CompanyDaoImpl implements ICompanyDao {
 				companies.add(map(resultSet));
 			}
 		} catch (SQLException e) {
-
+			throw new DaoException("CompanyDao@list() failed !", e);
 		} finally {
 			DaoUtils.silentClosing(preparedStatement, resultSet);
 		}

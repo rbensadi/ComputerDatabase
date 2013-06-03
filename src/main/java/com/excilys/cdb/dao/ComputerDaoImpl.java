@@ -29,7 +29,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		daoFactory = DaoFactory.INSTANCE;
 	}
 
-	public int insert(Computer computer) {
+	public int insert(Computer computer) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -61,7 +61,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		return id;
 	}
 
-	public Computer find(int id) {
+	public Computer find(int id) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -84,7 +84,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		return computer;
 	}
 
-	public int numberOfComputers(String filterByName) {
+	public int numberOfComputers(String filterByName) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -112,7 +112,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		return count;
 	}
 
-	public void update(Computer computer) {
+	public void update(Computer computer) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -136,7 +136,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 		}
 	}
 
-	public void delete(int id) {
+	public void delete(int id) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -156,7 +156,7 @@ public enum ComputerDaoImpl implements IComputerDao {
 	}
 
 	public List<Computer> list(String filterByName, String sortedColumn,
-			String order, int limit, int offset) {
+			String order, int limit, int offset) throws DaoException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;

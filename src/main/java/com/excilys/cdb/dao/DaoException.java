@@ -1,6 +1,6 @@
 package com.excilys.cdb.dao;
 
-public class DaoException extends RuntimeException {
+public class DaoException extends Exception {
 
 	private static final long serialVersionUID = 1100000002L;
 

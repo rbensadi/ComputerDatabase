@@ -3,6 +3,7 @@ package com.excilys.cdb.service;
 import java.util.List;
 
 import com.excilys.cdb.dao.ComputerDaoImpl;
+import com.excilys.cdb.dao.DaoException;
 import com.excilys.cdb.dao.DaoFactory;
 import com.excilys.cdb.dao.IComputerDao;
 import com.excilys.cdb.pojo.Computer;
@@ -21,46 +22,77 @@ public enum ComputerServiceImpl implements IComputerService {
 	}
 
 	public int insert(Computer computer) {
-		int id = computerDao.insert(computer);
-		daoFactory.closeConnection();
+		int id = 0;
+		try {
+			id = computerDao.insert(computer);
+		} catch (DaoException e) {
+			throw new ServiceException("ComputerService@insert() failed !", e);
+		} finally {
+			daoFactory.closeConnection();
+		}
 		return id;
 	}
 
-	public Computer findById(int id) {
-		Computer computer = computerDao.find(id);
-		daoFactory.closeConnection();
+	public Computer find(int id) {
+		Computer computer = null;
+		try {
+			computer = computerDao.find(id);
+		} catch (DaoException e) {
+			throw new ServiceException("ComputerService@find() failed !", e);
+		} finally {
+			daoFactory.closeConnection();
+		}
 		return computer;
 	}
 
 	public int numberOfComputers(String filterByName) {
-		int numberOfComputers = computerDao.numberOfComputers(filterByName);
-		daoFactory.closeConnection();
+		int numberOfComputers = 0;
+		try {
+			numberOfComputers = computerDao.numberOfComputers(filterByName);
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"ComputerService@numberOfComputers() failed !", e);
+		} finally {
+			daoFactory.closeConnection();
+		}
 		return numberOfComputers;
 	}
 
 	public void update(Computer computer) {
-		computerDao.update(computer);
-		daoFactory.closeConnection();
+		try {
+			computerDao.update(computer);
+		} catch (DaoException e) {
+			throw new ServiceException("ComputerService@update() failed !", e);
+		} finally {
+			daoFactory.closeConnection();
+		}
 	}
 
 	public void delete(int id) {
-		computerDao.delete(id);
-		daoFactory.closeConnection();
+		try {
+			computerDao.delete(id);
+		} catch (DaoException e) {
+			throw new ServiceException("ComputerService@delete() failed !", e);
+		} finally {
+			daoFactory.closeConnection();
+		}
 	}
 
 	public List<Computer> list(String filterByName, int sortedColumn,
 			int limit, int offset) {
-
-		List<Computer> computers = getComputers(filterByName, sortedColumn,
-				limit, offset);
-		
-		daoFactory.closeConnection();
-
+		List<Computer> computers = null;
+		try {
+			computers = getComputers(filterByName, sortedColumn, limit, offset);
+		} catch (DaoException e) {
+			throw new ServiceException("ComputerService@list() failed !", e);
+		} finally {
+			daoFactory.closeConnection();
+		}
 		return computers;
 	}
 
 	private List<Computer> getComputers(String filterByName, int sortedColumn,
-			int limit, int offset) {
+			int limit, int offset) throws DaoException {
 
 		int absoluteColumnId = Math.abs(sortedColumn);
 		String order = sortedColumn < 0 ? "DESC" : "ASC";
@@ -73,14 +105,17 @@ public enum ComputerServiceImpl implements IComputerService {
 	public ComputersAndCount getComputersAndCount(String filterByName,
 			int sorted, int offset) {
 		ComputersAndCount computersAndCount = new ComputersAndCount();
-
-		computersAndCount.setNumberOfComputers(computerDao
-				.numberOfComputers(filterByName));
-		computersAndCount.setComputers(getComputers(filterByName, sorted,
-				LIMIT, offset));
-		
-		daoFactory.closeConnection();
-
+		try {
+			computersAndCount.setNumberOfComputers(computerDao
+					.numberOfComputers(filterByName));
+			computersAndCount.setComputers(getComputers(filterByName, sorted,
+					LIMIT, offset));
+		} catch (DaoException e) {
+			throw new ServiceException(
+					"ComputerService@getComputersAndCount() failed !", e);
+		} finally {
+			daoFactory.closeConnection();
+		}
 		return computersAndCount;
 	}
 

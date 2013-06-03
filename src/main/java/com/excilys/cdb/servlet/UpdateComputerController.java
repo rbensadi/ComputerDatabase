@@ -44,7 +44,7 @@ public class UpdateComputerController extends HttpServlet {
 		Computer computer;
 		try {
 			id = Integer.parseInt(idStr);
-			computer = computerService.findById(id);
+			computer = computerService.find(id);
 		} catch (NumberFormatException e) {
 			computer = null;
 		}

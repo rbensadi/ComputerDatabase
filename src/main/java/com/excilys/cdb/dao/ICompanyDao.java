@@ -9,7 +9,7 @@ public interface ICompanyDao {
 	String ID_FIELD = "company.id";
 	String NAME_FIELD = "company.name";
 
-	Company find(int id);
-	
-	List<Company> list();
+	Company find(int id) throws DaoException;
+
+	List<Company> list() throws DaoException;
 }

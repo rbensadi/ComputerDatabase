@@ -11,7 +11,7 @@ public interface IComputerService {
 
 	int insert(Computer computer);
 
-	Computer findById(int id);
+	Computer find(int id);
 
 	int numberOfComputers(String filterByName);
 

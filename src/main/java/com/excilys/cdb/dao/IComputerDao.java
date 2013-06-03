@@ -16,16 +16,16 @@ public interface IComputerDao {
 	String[] COLUMS_NAME_ID = { "", ID_FIELD, NAME_FIELD, INTRODUCED_FIELD,
 			DISCOUNTINUED_FIELD, NAME_COMPANY_FIELD };
 
-	int insert(Computer computer);
+	int insert(Computer computer) throws DaoException;
 
-	Computer find(int id);
+	Computer find(int id) throws DaoException;
 
-	int numberOfComputers(String filter);
+	int numberOfComputers(String filter) throws DaoException;
 
-	void update(Computer computer);
+	void update(Computer computer) throws DaoException;
 
-	void delete(int id);
+	void delete(int id) throws DaoException;
 
 	List<Computer> list(String filterByName, String sortedColumn, String order,
-			int limit, int offset);
+			int limit, int offset) throws DaoException;
 }
