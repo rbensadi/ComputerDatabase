@@ -118,7 +118,7 @@ public class CrudComputerForm extends AForm {
 		try {
 			date = dateValidation(introduced, INTRODUCED_ERROR_MESSAGE);
 			if (date != null) {
-				computer.setIntroduced(new java.sql.Date(date.getTime()));
+				computer.setIntroduced(date);
 			} else {
 				computer.setIntroduced(null);
 			}
@@ -133,7 +133,7 @@ public class CrudComputerForm extends AForm {
 		try {
 			date = dateValidation(discontinued, DISCONTINUED_ERROR_MESSAGE);
 			if (date != null) {
-				computer.setDiscontinued(new java.sql.Date(date.getTime()));
+				computer.setDiscontinued(date);
 			} else {
 				computer.setDiscontinued(null);
 			}
