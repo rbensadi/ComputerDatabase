@@ -7,10 +7,12 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.cdb.pojo.Company;
 
 @Repository
+@Transactional(readOnly = true)
 public class CompanyDaoImpl implements ICompanyDao {
 
 	private static final String SQL_FIND = "SELECT id,name FROM company WHERE id = ?";

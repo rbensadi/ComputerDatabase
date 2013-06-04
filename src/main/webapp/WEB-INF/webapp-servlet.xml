@@ -18,12 +18,17 @@
 		<property name="username" value="java" />
 		<property name="password" value="java" />
 	</bean>
+
+	<!-- Allows to use transactionnal annotations -->
+	<tx:annotation-driven />
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
 	<!-- <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"> 
 		<property name="sessionFactory"> <ref bean="sessionFactory" /> </property> 
 		</bean> -->
-
-	<!-- Allows to use transactionnal annotations -->
-	<!-- <tx:annotation-driven /> -->
 
 	<!-- Pour utiliser RequestMapping -->
 	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" 

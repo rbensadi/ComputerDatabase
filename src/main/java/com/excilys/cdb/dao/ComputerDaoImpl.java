@@ -14,10 +14,12 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.cdb.pojo.Computer;
 
 @Repository
+@Transactional
 public class ComputerDaoImpl implements IComputerDao {
 
 	private static final String SQL_INSERT = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
@@ -64,11 +66,13 @@ public class ComputerDaoImpl implements IComputerDao {
 		return keyHolder.getKey().intValue();
 	}
 
+	@Transactional(readOnly=true)
 	public Computer find(int id) throws DaoException {
 		return jdbcTemplate.queryForObject(SQL_FIND, new Object[] { id },
 				new ComputerRowMapper());
 	}
 
+	@Transactional(readOnly=true)
 	public int numberOfComputers(String filterByName) throws DaoException {
 		StringBuilder sb = new StringBuilder(filterByName.length() + 2);
 		sb.append("%");
@@ -92,6 +96,7 @@ public class ComputerDaoImpl implements IComputerDao {
 		jdbcTemplate.update(SQL_DELETE, new Object[] { id });
 	}
 
+	@Transactional(readOnly=true)
 	public List<Computer> list(String filterByName, String sortedColumn,
 			String order, int limit, int offset) throws DaoException {
 		String query = getOrderForQuery(sortedColumn, order);
