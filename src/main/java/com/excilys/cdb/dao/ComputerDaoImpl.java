@@ -2,15 +2,19 @@ package com.excilys.cdb.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Statement;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
 
 @Repository
@@ -25,163 +29,78 @@ public class ComputerDaoImpl implements IComputerDao {
 	private static final String SQL_LIST_PART2 = " WHERE computer.name LIKE ? ORDER BY ISNULL(";
 	private static final String SQL_LIST_PART3 = " LIMIT ? OFFSET ?";
 
+	private JdbcTemplate jdbcTemplate;
+
 	@Autowired
-	private DaoFactory daoFactory;
+	public void setJdbcTemplate(DataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+	}
 
 	public int insert(Computer computer) throws DaoException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		int id = -1;
-
-		Integer companyId = computer.getCompany() == null ? null : computer
-				.getCompany().getId();
-
-		connection = daoFactory.getConnection();
-		try {
-			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					SQL_INSERT, true, computer.getName(),
-					computer.getIntroduced(), computer.getDiscontinued(),
-					companyId);
-			int result = preparedStatement.executeUpdate();
-			if (result != 1) {
-				throw new DaoException("ComputerDao@insert() failed !");
+		final Computer computerFinal = computer;
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		PreparedStatementCreator psc = new PreparedStatementCreator() {
+			public PreparedStatement createPreparedStatement(Connection con)
+					throws SQLException {
+				PreparedStatement ps = con.prepareStatement(SQL_INSERT,
+						Statement.RETURN_GENERATED_KEYS);
+				ps.setString(1, computerFinal.getName());
+				ps.setDate(
+						2,
+						(computerFinal.getIntroduced() != null ? new java.sql.Date(
+								computerFinal.getIntroduced().getTime()) : null));
+				ps.setDate(
+						3,
+						(computerFinal.getDiscontinued() != null ? new java.sql.Date(
+								computerFinal.getDiscontinued().getTime())
+								: null));
+				ps.setObject(4,
+						computerFinal.getCompany() != null ? computerFinal
+								.getCompany().getId() : null);
+				return ps;
 			}
-			resultSet = preparedStatement.getGeneratedKeys();
-			if (resultSet.next()) {
-				id = resultSet.getInt(1);
-			}
-		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@insert() failed !", e);
-		} finally {
-			DaoUtils.silentClosing(preparedStatement, resultSet);
-		}
-
-		return id;
+		};
+		jdbcTemplate.update(psc, keyHolder);
+		return keyHolder.getKey().intValue();
 	}
 
 	public Computer find(int id) throws DaoException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		Computer computer = null;
-
-		connection = daoFactory.getConnection();
-		try {
-			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					SQL_FIND, false, id);
-			resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-				computer = map(resultSet);
-			}
-		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@find() failed !", e);
-		} finally {
-			DaoUtils.silentClosing(preparedStatement, resultSet);
-		}
-
-		return computer;
+		return jdbcTemplate.queryForObject(SQL_FIND, new Object[] { id },
+				new ComputerRowMapper());
 	}
 
 	public int numberOfComputers(String filterByName) throws DaoException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		int count = 0;
-
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(filterByName.length() + 2);
 		sb.append("%");
 		sb.append(filterByName);
 		sb.append("%");
-
-		connection = daoFactory.getConnection();
-		try {
-			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					SQL_COUNT, false, sb.toString());
-			resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-				count = resultSet.getInt(1);
-			}
-		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@numberOfComputers() failed !", e);
-		} finally {
-			DaoUtils.silentClosing(preparedStatement, resultSet);
-		}
-
-		return count;
+		return jdbcTemplate.queryForObject(SQL_COUNT,
+				new Object[] { sb.toString() }, Integer.class);
 	}
 
 	public void update(Computer computer) throws DaoException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-
-		Integer companyId = computer.getCompany() == null ? null : computer
-				.getCompany().getId();
-
-		connection = daoFactory.getConnection();
-		try {
-			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					SQL_UPDATE, false, computer.getName(),
-					computer.getIntroduced(), computer.getDiscontinued(),
-					companyId, computer.getId());
-			int result = preparedStatement.executeUpdate();
-			if (result != 1) {
-				throw new DaoException("ComputerDao@update() failed !");
-			}
-		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@update() failed !", e);
-		} finally {
-			DaoUtils.silentClosing(preparedStatement);
-		}
+		jdbcTemplate.update(SQL_UPDATE,
+				new Object[] {
+						computer.getName(),
+						computer.getIntroduced(),
+						computer.getDiscontinued(),
+						computer.getCompany() != null ? computer.getCompany()
+								.getId() : null, computer.getId() });
 	}
 
 	public void delete(int id) throws DaoException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-
-		connection = daoFactory.getConnection();
-		try {
-			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					SQL_DELETE, false, id);
-			int result = preparedStatement.executeUpdate();
-			if (result != 1) {
-				throw new DaoException("ComputerDao@delete() failed !");
-			}
-		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@delete() failed !", e);
-		} finally {
-			DaoUtils.silentClosing(preparedStatement);
-		}
+		jdbcTemplate.update(SQL_DELETE, new Object[] { id });
 	}
 
 	public List<Computer> list(String filterByName, String sortedColumn,
 			String order, int limit, int offset) throws DaoException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		List<Computer> computers = new ArrayList<Computer>();
-
-		StringBuilder sb = new StringBuilder();
+		String query = getOrderForQuery(sortedColumn, order);
+		StringBuilder sb = new StringBuilder(filterByName.length() + 2);
 		sb.append("%");
 		sb.append(filterByName);
 		sb.append("%");
-
-		connection = daoFactory.getConnection();
-		try {
-			preparedStatement = DaoUtils.getPreparedStatement(connection,
-					getOrderForQuery(sortedColumn, order), false,
-					sb.toString(), limit, offset);
-			resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				computers.add(map(resultSet));
-			}
-		} catch (SQLException e) {
-			throw new DaoException("ComputerDao@list() failed !", e);
-		} finally {
-			DaoUtils.silentClosing(preparedStatement, resultSet);
-		}
-
-		return computers;
+		return jdbcTemplate.query(query, new Object[] { sb.toString(), limit,
+				offset }, new ComputerRowMapper());
 	}
 
 	private static String getOrderForQuery(String columnName, String order) {
@@ -202,25 +121,4 @@ public class ComputerDaoImpl implements IComputerDao {
 
 		return sb.toString();
 	}
-
-	private Computer map(ResultSet resultSet) throws SQLException {
-		Computer computer = new Computer();
-
-		computer.setId(resultSet.getInt(ID_FIELD));
-		computer.setName(resultSet.getString(NAME_FIELD));
-		computer.setIntroduced(resultSet.getDate(INTRODUCED_FIELD));
-		computer.setDiscontinued(resultSet.getDate(DISCOUNTINUED_FIELD));
-		Object o = resultSet.getObject(ID_COMPANY_FIELD);
-		if (o == null) {
-			computer.setCompany(null);
-		} else {
-			Company company = new Company();
-			company.setId(resultSet.getInt(ID_COMPANY_FIELD));
-			company.setName(resultSet.getString(NAME_COMPANY_FIELD));
-			computer.setCompany(company);
-		}
-
-		return computer;
-	}
-
 }
