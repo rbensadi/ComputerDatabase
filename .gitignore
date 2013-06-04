@@ -6,6 +6,7 @@
 bin
 *.jar
 *.war
+.springBeans
 
 # Maven
 target

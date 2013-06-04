@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import com.excilys.cdb.form.FormUtils;
 import com.excilys.cdb.pojo.ComputersAndCount;
-import com.excilys.cdb.service.ComputerServiceImpl;
 import com.excilys.cdb.service.IComputerService;
 
 @WebServlet("/computers")
@@ -41,13 +43,19 @@ public class ComputersController extends HttpServlet {
 	private static final int SORTED_MIN = DEFAULT_SORTED;
 	private static final int SORTED_MAX = 5;
 
+	private ApplicationContext applicationContext;
+	
 	private IComputerService computerService;
 
 	@Override
 	public void init() throws ServletException {
-		computerService = ComputerServiceImpl.INSTANCE;
+		if (applicationContext == null) {
+			applicationContext = WebApplicationContextUtils
+					.getWebApplicationContext(getServletContext());
+		}
+		computerService = applicationContext.getBean(IComputerService.class);
 	}
-
+	
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {

@@ -2,23 +2,21 @@ package com.excilys.cdb.service;
 
 import java.util.List;
 
-import com.excilys.cdb.dao.CompanyDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.dao.DaoException;
 import com.excilys.cdb.dao.DaoFactory;
 import com.excilys.cdb.dao.ICompanyDao;
 import com.excilys.cdb.pojo.Company;
 
-public enum CompanyServiceImpl implements ICompanyService {
+@Service
+public class CompanyServiceImpl implements ICompanyService {
 
-	INSTANCE;
-
+	@Autowired
 	private DaoFactory daoFactory;
+	@Autowired
 	private ICompanyDao companyDao;
-
-	private CompanyServiceImpl() {
-		daoFactory = DaoFactory.INSTANCE;
-		companyDao = CompanyDaoImpl.INSTANCE;
-	}
 
 	public Company find(int id) {
 		Company company = null;

@@ -7,8 +7,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public enum DaoFactory {
-	INSTANCE;
+import org.springframework.stereotype.Component;
+
+@Component
+public class DaoFactory {
 
 	private static final String PROPERTIES_FILE = "/com/excilys/cdb/dao/dao.properties";
 	private static final String PROPERTY_URL = "url";

@@ -2,24 +2,22 @@ package com.excilys.cdb.service;
 
 import java.util.List;
 
-import com.excilys.cdb.dao.ComputerDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.dao.DaoException;
 import com.excilys.cdb.dao.DaoFactory;
 import com.excilys.cdb.dao.IComputerDao;
 import com.excilys.cdb.pojo.Computer;
 import com.excilys.cdb.pojo.ComputersAndCount;
 
-public enum ComputerServiceImpl implements IComputerService {
+@Service
+public class ComputerServiceImpl implements IComputerService {
 
-	INSTANCE;
-
+	@Autowired
 	private DaoFactory daoFactory;
+	@Autowired
 	private IComputerDao computerDao;
-
-	private ComputerServiceImpl() {
-		daoFactory = DaoFactory.INSTANCE;
-		computerDao = ComputerDaoImpl.INSTANCE;
-	}
 
 	public int insert(Computer computer) {
 		int id = 0;

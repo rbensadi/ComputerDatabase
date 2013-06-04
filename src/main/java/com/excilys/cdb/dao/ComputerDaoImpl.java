@@ -7,12 +7,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
 
-public enum ComputerDaoImpl implements IComputerDao {
-
-	INSTANCE;
+@Repository
+public class ComputerDaoImpl implements IComputerDao {
 
 	private static final String SQL_INSERT = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
 	private static final String SQL_FIND = "SELECT computer.id,computer.name,computer.introduced,computer.discontinued,company.id AS companyId,company.name AS companyName FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?";
@@ -23,11 +25,8 @@ public enum ComputerDaoImpl implements IComputerDao {
 	private static final String SQL_LIST_PART2 = " WHERE computer.name LIKE ? ORDER BY ISNULL(";
 	private static final String SQL_LIST_PART3 = " LIMIT ? OFFSET ?";
 
+	@Autowired
 	private DaoFactory daoFactory;
-
-	private ComputerDaoImpl() {
-		daoFactory = DaoFactory.INSTANCE;
-	}
 
 	public int insert(Computer computer) throws DaoException {
 		Connection connection = null;

@@ -9,12 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import com.excilys.cdb.form.AForm;
 import com.excilys.cdb.form.CrudComputerForm;
 import com.excilys.cdb.pojo.Company;
 import com.excilys.cdb.pojo.Computer;
-import com.excilys.cdb.service.CompanyServiceImpl;
-import com.excilys.cdb.service.ComputerServiceImpl;
 import com.excilys.cdb.service.ICompanyService;
 import com.excilys.cdb.service.IComputerService;
 
@@ -34,15 +35,22 @@ public class AddComputerController extends HttpServlet {
 	public static final String VIEW = "/WEB-INF/jsp/crudComputer.jsp";
 	public static final String REDIRECT_VIEW = ".." + ComputersController.URL;
 
+	private ApplicationContext applicationContext;
+
 	private IComputerService computerService;
 	private ICompanyService companyService;
 
 	@Override
 	public void init() throws ServletException {
-		computerService = ComputerServiceImpl.INSTANCE;
-		companyService = CompanyServiceImpl.INSTANCE;
+		if (applicationContext == null) {
+			applicationContext = WebApplicationContextUtils
+					.getWebApplicationContext(getServletContext());
+		}
+		computerService = applicationContext.getBean(IComputerService.class);
+		companyService = applicationContext.getBean(ICompanyService.class);
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
@@ -55,6 +63,7 @@ public class AddComputerController extends HttpServlet {
 				response);
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
@@ -62,7 +71,8 @@ public class AddComputerController extends HttpServlet {
 		Computer computer = form.computerCrudValidation(request);
 
 		if (computer.getCompany() != null) {
-			Company company = companyService.find(computer.getCompany().getId());
+			Company company = companyService
+					.find(computer.getCompany().getId());
 			computer.setCompany(company);
 		}
 

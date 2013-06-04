@@ -7,20 +7,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.excilys.cdb.pojo.Company;
 
-public enum CompanyDaoImpl implements ICompanyDao {
-
-	INSTANCE;
+@Repository
+public class CompanyDaoImpl implements ICompanyDao {
 
 	private static final String SQL_FIND = "SELECT id,name FROM company WHERE id = ?";
 	private static final String SQL_LIST = "SELECT id,name FROM company ORDER BY name";
 
+	@Autowired
 	private DaoFactory daoFactory;
-
-	private CompanyDaoImpl() {
-		this.daoFactory = DaoFactory.INSTANCE;
-	}
 
 	public Company find(int id) throws DaoException {
 		Connection connection = null;
