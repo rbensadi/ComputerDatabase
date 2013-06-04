@@ -10,6 +10,18 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.excilys.cdb" />
 
+	<!-- DataSource -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/computers" />
+		<property name="username" value="java" />
+		<property name="password" value="java" />
+	</bean>
+	<!-- <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"> 
+		<property name="sessionFactory"> <ref bean="sessionFactory" /> </property> 
+		</bean> -->
+
 	<!-- Allows to use transactionnal annotations -->
 	<!-- <tx:annotation-driven /> -->
 
@@ -22,14 +34,6 @@
 		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" /> <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"> 
 		<property name="basenames"> <list> <value>messages</value> <value>errors</value> 
 		</list> </property> </bean> -->
-
-	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> <property 
-		name="url" value="jdbc:mysql://localhost:3306/fProjetSpring" /> <property 
-		name="username" value="java" /> <property name="password" value="java" /> 
-		</bean> <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"> 
-		<property name="sessionFactory"> <ref bean="sessionFactory" /> </property> 
-		</bean> -->
 
 	<!-- <bean id="hibernateDao" class="com.excilys.formation.dao.HibernateDao"> 
 		<property name="sessionFactory" ref="sessionFactory" /> </bean> <bean id="hibernateAdvancedBookDao" 
