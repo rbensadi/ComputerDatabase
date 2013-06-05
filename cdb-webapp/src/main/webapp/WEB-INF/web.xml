@@ -6,7 +6,7 @@
 	<!-- Spring -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring-config.xml,classpath:/service-spring-config.xml,classpath:/dao-spring-config.xml
+		<param-value>classpath:/service-spring-config.xml,classpath:/dao-spring-config.xml
 		</param-value>
 	</context-param>
 	<listener>
