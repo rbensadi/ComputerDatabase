@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.excilys.cdb</groupId>
+		<artifactId>ComputerDatabase</artifactId>
+		<version>0.7.WS</version>
+	</parent>
+	<artifactId>cdb-dao-impl</artifactId>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<!-- MODULE -->
+		<dependency>
+			<groupId>com.excilys.cdb</groupId>
+			<artifactId>cdb-model</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.excilys.cdb</groupId>
+			<artifactId>cdb-dao-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.excilys.cdb</groupId>
+			<artifactId>cdb-dao-core</artifactId>
+		</dependency>
+		<!-- DB -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<!-- APPLICATION -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+	</dependencies>
+</project>
