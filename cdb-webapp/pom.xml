@@ -17,40 +17,17 @@
 		<!-- MODULE -->
 		<dependency>
 			<groupId>com.excilys.cdb</groupId>
-			<artifactId>cdb-model</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.excilys.cdb</groupId>
 			<artifactId>cdb-service-api</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.excilys.cdb</groupId>
-			<artifactId>cdb-dao-api</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.excilys.cdb</groupId>
-			<artifactId>cdb-service-impl</artifactId>
-			<scope>runtime</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.excilys.cdb</groupId>
-					<artifactId>cdb-service-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.excilys.cdb</groupId>
 			<artifactId>cdb-dao-impl</artifactId>
 			<scope>runtime</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.excilys.cdb</groupId>
-					<artifactId>cdb-dao-api</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.excilys.cdb</groupId>
+			<artifactId>cdb-service-impl</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<!-- APPLICATION -->
 		<dependency>
@@ -86,6 +63,12 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<!-- LOGGING -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 

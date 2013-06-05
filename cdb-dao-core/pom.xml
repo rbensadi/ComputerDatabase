@@ -13,10 +13,6 @@
 		<!-- MODULE -->
 		<dependency>
 			<groupId>com.excilys.cdb</groupId>
-			<artifactId>cdb-model</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.excilys.cdb</groupId>
 			<artifactId>cdb-dao-api</artifactId>
 		</dependency>
 		<!-- DB -->
